@@ -15,6 +15,8 @@ public class Server {
     public static void main(String[] args){
         System.out.println("Server starting...");
         //initializing data structure with json file
+        Database db = new Database();
+
         //creating socket
         try {
             ServerSocket listeningSocket = new ServerSocket(port);
