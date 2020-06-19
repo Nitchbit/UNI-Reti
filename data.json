@@ -1,0 +1,34 @@
+{
+  "name4": {
+    "passwd": "pass4",
+    "onlineStatus": false,
+    "score": 0,
+    "friendList": [
+      "name3"
+    ]
+  },
+  "name3": {
+    "passwd": "pass3",
+    "onlineStatus": false,
+    "score": 0,
+    "friendList": [
+      "name4"
+    ]
+  },
+  "name2": {
+    "passwd": "pass2",
+    "onlineStatus": false,
+    "score": 0,
+    "friendList": [
+      "name1"
+    ]
+  },
+  "name1": {
+    "passwd": "pass1",
+    "onlineStatus": false,
+    "score": 0,
+    "friendList": [
+      "name2"
+    ]
+  }
+}
