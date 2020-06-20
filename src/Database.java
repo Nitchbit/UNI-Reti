@@ -1,15 +1,15 @@
 import java.io.*;
-import java.lang.reflect.Type;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.rmi.RemoteException;
 import java.rmi.server.RemoteServer;
 import java.util.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google. gson.GsonBuilder;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 
 public class Database extends RemoteServer implements RegRemoteInterface {
     private class DataObject {
@@ -18,29 +18,22 @@ public class Database extends RemoteServer implements RegRemoteInterface {
         private int score;
         private ArrayList<String> friendList;
 
+        //inet address
+        private transient InetAddress inetAddr;
+        //UDP port
+        private transient int UDPport;
+
         //builder
         public DataObject(String passwd) {
             this.passwd = passwd;
             this.score = 0;
             this.friendList = new ArrayList<>();
         }
+
         public String getPasswd() {
             return passwd;
         }
-        public void setScore(int newScore) {
-            this.score = newScore;
-        }
-        public int getScore() {
-            return this.score;
-        }
-        public int addFriend(String nickfriend) {
-            if(friendList.contains(nickfriend)) return -1;
-            friendList.add(nickfriend);
-            return 0;
-        }
-        public ArrayList<String> getFriendList() {
-            return this.friendList;
-        }
+
         public void setOnLine() {
             this.onlineStatus = true;
         }
@@ -49,6 +42,35 @@ public class Database extends RemoteServer implements RegRemoteInterface {
         }
         public boolean getStatus() {
             return onlineStatus;
+        }
+
+        public void setScore(int newScore) {
+            this.score = newScore;
+        }
+        public int getScore() {
+            return this.score;
+        }
+
+        public int addFriend(String nickfriend) {
+            if(friendList.contains(nickfriend)) return -1;
+            friendList.add(nickfriend);
+            return 0;
+        }
+        public ArrayList<String> getFriendList() {
+            return this.friendList;
+        }
+
+        public void setInetAddress(InetAddress addr) {
+            this.inetAddr = addr;
+        }
+        public InetAddress getInetAdrress() {
+            return this.inetAddr;
+        }
+        public void setUDPport(int port) {
+            this.UDPport = port;
+        }
+        public int getUDPport() {
+            return this.UDPport;
         }
     }
     private class UserRank implements Comparable<UserRank> {
@@ -104,11 +126,11 @@ public class Database extends RemoteServer implements RegRemoteInterface {
 
     //userRegister
     @Override
-    public synchronized int userRegistration(String nickname, String passwd) throws NullPointerException {
+    public synchronized ReturnCodes.Codex userRegistration(String nickname, String passwd) throws NullPointerException {
         if(nickname == null || passwd == null) throw new NullPointerException("Invalid username or password");
         //code error to manage...
-        if(nickname.equals("") || passwd.equals("")) return -1;
-        if(dataMap.containsKey(nickname)) return -1;
+        if(nickname.equals("") || passwd.equals("")) return ReturnCodes.Codex.EMPTY_NICK_OR_PASS;
+        if(dataMap.containsKey(nickname)) return ReturnCodes.Codex.ALREADY_REGISTERED;
         dataMap.put(nickname, new DataObject(passwd));
         //write on JSON...
         try {
@@ -118,43 +140,50 @@ public class Database extends RemoteServer implements RegRemoteInterface {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return 0;
+        return ReturnCodes.Codex.SUCCESS;
     }
     //userLogin
-    public synchronized int userLogin(String nickname, String passwd) throws NullPointerException{
-        if(nickname == null || passwd == null) throw new NullPointerException("Invalid nickname or password");
+    public synchronized ReturnCodes.Codex userLogin(String nickname, String passwd, InetAddress addr) throws NullPointerException{
+        if(nickname == null || passwd == null) throw new NullPointerException("Invalid username or password");
         //code error to manage...
         if(dataMap.containsKey(nickname)) {
             DataObject user = dataMap.get(nickname);
-            if(user.getPasswd().equals(passwd) && !user.getStatus()) {
-                user.setOnLine();
-                return 0;
+            //if passwd correspond to the user's password
+            if(user.getPasswd().equals(passwd)) {
+                //if he's not online
+                if (!user.getStatus()) {
+                    user.setOnLine();
+                    user.setInetAddress(addr);
+                    user.setUDPport((int) ((Math.random() * ((65535 - 1024) + 1)) + 1024));
+                    return ReturnCodes.Codex.SUCCESS;
+                } else return ReturnCodes.Codex.ALREADY_LOGGED_IN;
             }
-            else return -1;
+            else return ReturnCodes.Codex.WRONG_PASSWORD;
         }
-        else return -1;
+        else return ReturnCodes.Codex.USER_NOT_FOUND;
     }
     //userLogout
-    public synchronized int userLogout(String nickname) throws NullPointerException {
-        if(nickname == null) throw new NullPointerException("Invalid nickname");
+    public synchronized ReturnCodes.Codex userLogout(String nickname) throws NullPointerException {
+        if(nickname == null) throw new NullPointerException("Invalid username");
         //error code to manage
         if(dataMap.containsKey(nickname)) {
             DataObject user = dataMap.get(nickname);
             if(user.getStatus()) {
                 user.setOffLine();
-                return 0;
+                return ReturnCodes.Codex.SUCCESS;
             }
-            else return -1;
+            else return ReturnCodes.Codex.ALREADY_LOGGED_OUT;
         }
-        else return -1;
+        else return ReturnCodes.Codex.USER_NOT_FOUND;
     }
     //userAddFriend
-    public synchronized int userAddFriend(String nickname, String nickfriend) throws NullPointerException, IOException {
-        if(nickname == null || nickfriend == null) throw new NullPointerException("Invalid nickname");
+    public synchronized ReturnCodes.Codex userAddFriend(String nickname, String nickfriend) throws NullPointerException, IOException {
+        if(nickname == null || nickfriend == null) throw new NullPointerException("Invalid username or nickfriend");
         //error code to manage
-        if(dataMap.containsKey(nickname) && dataMap.containsKey(nickfriend)) {
-            if(dataMap.get(nickname).addFriend(nickfriend) == -1) return -1;
-            if(dataMap.get(nickfriend).addFriend(nickname) == -1) return -1;
+        if(dataMap.containsKey(nickfriend)) {
+            //already friends
+            if(dataMap.get(nickname).addFriend(nickfriend) == -1 || dataMap.get(nickfriend).addFriend(nickname) == -1)
+                return ReturnCodes.Codex.ALREADY_FRIENDS;
             try {
                 FileWriter wrt = new FileWriter(jsonpath);
                 gwriter.toJson(dataMap, wrt);
@@ -162,22 +191,67 @@ public class Database extends RemoteServer implements RegRemoteInterface {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return 0;
+            return ReturnCodes.Codex.SUCCESS;
         }
-        else return -1;
+        else return ReturnCodes.Codex.USER_NOT_FOUND;
     }
     //userListFriends
     public synchronized JsonArray userListFriends(String nickname) throws NullPointerException {
-        if(nickname == null) throw new NullPointerException("Invalid nickname");
+        if(nickname == null) throw new NullPointerException("Invalid username");
         //error code to manage
         if(dataMap.containsKey(nickname))
             return new Gson().toJsonTree(dataMap.get(nickname).getFriendList()).getAsJsonArray();
         else return null;
     }
     //userChallenge
+    public ReturnCodes.Codex userChallenge(String nickname, String nickfriend, DatagramSocket dataSock, int challengePort) throws NullPointerException {
+        if(nickname == null || nickfriend == null) throw new NullPointerException("Invalid username or nickfriend");
+        if(dataMap.containsKey(nickfriend)) {
+            if(dataMap.get(nickname).getFriendList().contains(nickfriend)) {
+                //sending request if nickfriend is online
+                if(dataMap.get(nickfriend).getStatus()) {
+                    String line = "Challenge " + nickname + " " + challengePort;
+                    DatagramPacket message = new DatagramPacket(line.getBytes(), line.getBytes().length, dataMap.get(nickfriend).getInetAdrress(), dataMap.get(nickfriend).getUDPport());
+                    try {
+                        dataSock.send(message);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return ReturnCodes.Codex.SUCCESS;
+                }
+                else return ReturnCodes.Codex.USER_NOT_ONLINE;
+            }
+            else return ReturnCodes.Codex.NOT_A_FRIEND;
+        }
+        else return ReturnCodes.Codex.USER_NOT_FOUND;
+    }
+    //challengeRequestResult
+    public void challengeRequestResult(String nickname, String nickfriend, String result, DatagramSocket dataSock, int challengePort) {
+        String line = result;
+        //sending the timeout to the challenged
+        if(result.equals("Timeout")) {
+            line = line + " " + nickname;
+            DatagramPacket message = new DatagramPacket(line.getBytes(), line.getBytes().length, dataMap.get(nickfriend).getInetAdrress(), dataMap.get(nickfriend).getUDPport());
+            try {
+                dataSock.send(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            //sending the accepted or declined request to the challenger
+            if (result.equals("Accepted")) line = line + " " + challengePort;
+            DatagramPacket message = new DatagramPacket(line.getBytes(), line.getBytes().length, dataMap.get(nickname).getInetAdrress(), dataMap.get(nickname).getUDPport());
+            try {
+                dataSock.send(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     //showUserScore
     public int showUserScore(String nickname) throws NullPointerException {
-        if(nickname == null) throw new NullPointerException("Invalid nickname");
+        if(nickname == null) throw new NullPointerException("Invalid username");
         //error code to manage
         if(dataMap.containsKey(nickname))
             return dataMap.get(nickname).getScore();
@@ -185,7 +259,7 @@ public class Database extends RemoteServer implements RegRemoteInterface {
     }
     //showRanking
     public synchronized JsonArray showRanking(String nickname) throws NullPointerException {
-        if(nickname == null) throw new NullPointerException();
+        if(nickname == null) throw new NullPointerException("Invalid username");
         ArrayList<UserRank> rankingList = new ArrayList<>();
         //creating an iterator on the list of nickname's friends
         Iterator<String> itr = dataMap.get(nickname).getFriendList().iterator();
