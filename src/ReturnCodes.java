@@ -9,9 +9,7 @@ public class ReturnCodes {
         ALREADY_FRIENDS,
         NOT_A_FRIEND,
         USER_NOT_ONLINE,
-        SUCCESS
+        SUCCESS,
+        COMMAND_NOT_FOUND
     }
-
-    Codex status;
-    int score;
 }

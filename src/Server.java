@@ -15,7 +15,8 @@ public class Server {
     private static ThreadPoolExecutor exec;
     private static LinkedBlockingQueue<Runnable> queue;
 
-    private static int port = 6666;
+    private static int portSocket = 6000;
+    private static int portRMI = 7000;
     private static final String address = "localhost";
 
     public static void main(String[] args){
@@ -27,7 +28,7 @@ public class Server {
             //exporting dataStructure
             RegRemoteInterface remoteObj = (RegRemoteInterface) UnicastRemoteObject.exportObject(dataStructure, 0);
             //creating registry
-            Registry reg = LocateRegistry.createRegistry(6666);
+            Registry reg = LocateRegistry.createRegistry(portRMI);
             //rebinding
             reg.rebind("RegistrationService", remoteObj);
         } catch (RemoteException e) {
@@ -37,10 +38,9 @@ public class Server {
         queue = new LinkedBlockingQueue<Runnable>();
         exec = new ThreadPoolExecutor(30, 150, 50000, TimeUnit.MILLISECONDS, queue);
         //creating socket
-        ServerSocket listeningSocket;
         try {
-            listeningSocket = new ServerSocket(port);
-            while (true) {
+            ServerSocket listeningSocket = new ServerSocket(portSocket);
+            while(true) {
                 //waiting for connection
                 Socket activeSocket = listeningSocket.accept();
                 //connection established, creating task and executing it
