@@ -55,7 +55,7 @@ public class ClientHandler implements Runnable{
                 else if(tokenParams[0].equals("List") && tokenParams.length == 2) {
                     JsonArray list = dataStructure.userListFriends(tokenParams[1]);
 
-                    writer.write(list.getAsString());
+                    writer.write(String.valueOf(list));
                     writer.newLine();
                     writer.flush();
                 }
@@ -72,7 +72,7 @@ public class ClientHandler implements Runnable{
                 else if(tokenParams[0].equals("Rank") && tokenParams.length == 2) {
                     JsonArray list = dataStructure.showRanking(tokenParams[1]);
 
-                    writer.write(list.getAsString());
+                    writer.write(String.valueOf(list));
                     writer.newLine();
                     writer.flush();
                 }

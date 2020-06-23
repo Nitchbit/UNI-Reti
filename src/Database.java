@@ -15,7 +15,7 @@ import com.google.gson.reflect.TypeToken;
 public class Database extends RemoteServer implements RegRemoteInterface {
     private class DataObject {
         private String passwd;
-        private boolean onlineStatus;
+        private transient boolean onlineStatus;
         private int score;
         private ArrayList<String> friendList;
 
