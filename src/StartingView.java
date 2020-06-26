@@ -5,6 +5,7 @@ import java.awt.event.WindowEvent;
 
 public class StartingView {
     JFrame frame;
+
     public StartingView() {
         frame = new JFrame();
         frame.setSize(300, 280);

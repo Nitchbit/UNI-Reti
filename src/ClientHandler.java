@@ -59,13 +59,14 @@ public class ClientHandler implements Runnable{
                     writer.newLine();
                     writer.flush();
                 }
-                /*else if(tokenParams[0].equals("Challenge") && tokenParams.length == 5) {
+                else if(tokenParams[0].equals("Challenge") && tokenParams.length == 5) {
+                    int challengeTCPport = (int) ((Math.random() * ((65535 -1024) +1)) + 1024);
 
-                }*/
+                }
                 else if(tokenParams[0].equals("Score") && tokenParams.length == 2) {
                     int result = dataStructure.showUserScore(tokenParams[1]);
 
-                    writer.write(result);
+                    writer.write(String.valueOf(result));
                     writer.newLine();
                     writer.flush();
                 }

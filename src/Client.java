@@ -1,7 +1,9 @@
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.rmi.NotBoundException;
@@ -36,6 +38,11 @@ public class Client {
         }
 
         //Graphic Interface Starting
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         new StartingView();
     }
 
@@ -74,7 +81,7 @@ public class Client {
         return result;
     }
 
-    public ReturnCodes.Codex logout(String nickname) {
+    public ReturnCodes.Codex logout() {
         try {
             writer.write("Logout " + userNickname);
             writer.newLine();
@@ -109,6 +116,39 @@ public class Client {
             for(int i=0; i<arrayTmp.size(); i++) {
                 list.add(arrayTmp.get(i).getAsString());
             }
+            return list;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public int score() {
+        try {
+            writer.write("Score " + userNickname);
+            writer.newLine();
+            writer.flush();
+
+            return Integer.parseInt(reader.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public ArrayList<String> rank() {
+        try {
+            writer.write("Rank " + userNickname);
+            writer.newLine();
+            writer.flush();
+
+            JsonArray arrayTmp = new JsonParser().parse(reader.readLine()).getAsJsonArray();
+            ArrayList<String> list = new ArrayList<>();
+            for(int i=0; i<arrayTmp.size(); i++) {
+                JsonObject item = arrayTmp.get(i).getAsJsonObject();
+                list.add(item.get("nickname").toString() + ": " + item.get("score").toString());
+            }
+            return list;
         } catch (IOException e) {
             e.printStackTrace();
         }

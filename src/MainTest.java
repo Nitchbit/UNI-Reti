@@ -9,20 +9,8 @@ public class MainTest {
     public static void main(String[] args) {
         Database myDB = new Database();
 
-        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
-        try {
-            String line = input.readLine();
-            String[] tokens = line.split(" ");
-            System.out.println(tokens[0]);
-            System.out.println(tokens[1]);
-            System.out.println(tokens[2]);
-            writer.write(ReturnCodes.Codex.SUCCESS.toString());
-            writer.newLine();
-            writer.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ChallengeHandler thread = new ChallengeHandler(myDB, 2000);
+        thread.start();
 
         /*
 

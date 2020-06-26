@@ -86,7 +86,8 @@ public class RegLogView {
             }
             else {
                 ReturnCodes.Codex result = clientInstance.login(usernameField.getText(), passwdField.getText());
-                clientInstance.gotoMainView();
+                if(result.equals(ReturnCodes.Codex.SUCCESS))
+                    clientInstance.gotoMainView();
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
             }
         }

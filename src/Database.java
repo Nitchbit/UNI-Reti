@@ -13,7 +13,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 public class Database extends RemoteServer implements RegRemoteInterface {
-    private class DataObject {
+    public class DataObject {
         private String passwd;
         private transient boolean onlineStatus;
         private int score;
@@ -46,7 +46,7 @@ public class Database extends RemoteServer implements RegRemoteInterface {
         }
 
         public void setScore(int newScore) {
-            this.score = newScore;
+            this.score += newScore;
         }
         public int getScore() {
             return this.score;
@@ -93,20 +93,6 @@ public class Database extends RemoteServer implements RegRemoteInterface {
     private HashMap<String, DataObject> dataMap;
     private Gson gwriter;
     private static String jsonpath = "./data.json";
-    /*public void printHashMap() {
-        try {
-            FileWriter wrt = new FileWriter("./backup.json");
-            gwriter.toJson(dataMap, wrt);
-            wrt.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //System.out.println(dataMap);
-        for(String item : dataMap.keySet()) {
-            System.out.println(item);
-            System.out.println(dataMap.get(item).passwd);
-        }
-    }*/
 
     //builder
     public Database() {
@@ -264,6 +250,11 @@ public class Database extends RemoteServer implements RegRemoteInterface {
         rankingList.add(new UserRank(nickname, dataMap.get(nickname).getScore()));
         Collections.sort(rankingList);
         return new Gson().toJsonTree(rankingList).getAsJsonArray();
+    }
+
+    public synchronized DataObject getUser(String nickname) throws NullPointerException {
+        if(nickname == null) throw new NullPointerException("Invalid username");
+        return dataMap.get(nickname);
     }
 
 }
