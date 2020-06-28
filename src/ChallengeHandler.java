@@ -1,11 +1,17 @@
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
-
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import javax.net.ssl.HttpsURLConnection;
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -15,6 +21,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ChallengeHandler extends Thread {
@@ -39,7 +47,7 @@ public class ChallengeHandler extends Thread {
     private static int timer;
     //atomic variable to know if the client has finished
     private volatile AtomicInteger users;
-    private volatile AtomicInteger timeout;
+    public volatile AtomicInteger timeout;
 
     private int correct = 5;
     private int wrong = -3;
@@ -159,8 +167,11 @@ public class ChallengeHandler extends Thread {
                         //creating new key linked to socket client and saving it
                         SelectionKey cKey = client.register(selector, SelectionKey.OP_WRITE, new Item(null, 0));
                         clientkeys.add(cKey);
-                        //accedere al servizio per tradurre le parole scelte
-                        //...
+                        if(englishWords == null) {
+                            englishWords = new ArrayList<>();
+                            getTranslation();
+                            new MyTimer(kWords * 2, this);
+                        }
                     }
                     if(key.isReadable()) {
                         SocketChannel client = (SocketChannel) key.channel();
@@ -280,6 +291,7 @@ public class ChallengeHandler extends Thread {
         }
     }
 
+    //function to check the translation
     public void checkTranslation(String word, String translation, String name, Item item) {
         Database.DataObject user = database.getUser(name);
         if(word.equals(translation)) {
@@ -291,6 +303,51 @@ public class ChallengeHandler extends Thread {
             item.setPoints(wrong);
             item.incWrong();
             user.setScore(wrong);
+        }
+    }
+
+    //function to get the translation
+    public void getTranslation() throws IOException {
+        for(int i = 0; i < kWords; i++) {
+            URL newUrl = new URL("https://api.mymemory.translated.net/get?q=" + chosenWords.get(i) + "&langpair=it|en");
+            HttpsURLConnection connection = (HttpsURLConnection) newUrl.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Accept", "application/json");
+            if(connection.getResponseCode() != 200) {
+                throw new RuntimeException("Request failed: " + connection.getResponseCode());
+            }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line = reader.readLine();
+            try {
+                JSONParser parser = new JSONParser();
+                JSONObject o = (JSONObject) parser.parse(line);
+                JSONObject obj = (JSONObject) o.get("responseData");
+                englishWords.add(i, (String) obj.get("translatedText").toString().toLowerCase());
+                connection.disconnect();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //class that manages the timer
+    public class MyTimer {
+        private Timer timer;
+        private ChallengeHandler challenge;
+
+        public MyTimer(int timeInSeconds, ChallengeHandler challenge) {
+            this.challenge = challenge;
+            timer = new Timer();
+            timer.schedule(new Remind(), timeInSeconds * 1000);
+        }
+
+        public class Remind extends TimerTask {
+            @Override
+            public void run() {
+                if(challenge.isAlive()) {
+                    challenge.timeout.incrementAndGet();
+                }
+            }
         }
     }
 }

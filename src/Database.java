@@ -128,7 +128,7 @@ public class Database extends RemoteServer implements RegRemoteInterface {
         return ReturnCodes.Codex.SUCCESS;
     }
     //userLogin
-    public synchronized ReturnCodes.Codex userLogin(String nickname, String passwd, InetAddress addr) throws NullPointerException{
+    public synchronized ReturnCodes.Codex userLogin(String nickname, String passwd, InetAddress addr, int UDPport) throws NullPointerException{
         if(nickname == null || passwd == null) throw new NullPointerException("Invalid username or password");
         if(dataMap.containsKey(nickname)) {
             DataObject user = dataMap.get(nickname);
@@ -138,7 +138,7 @@ public class Database extends RemoteServer implements RegRemoteInterface {
                 if (!user.getStatus()) {
                     user.setOnLine();
                     user.setInetAddress(addr);
-                    user.setUDPport((int) ((Math.random() * ((65535 - 1024) + 1)) + 1024));
+                    user.setUDPport(UDPport);
                     return ReturnCodes.Codex.SUCCESS;
                 } else return ReturnCodes.Codex.ALREADY_LOGGED_IN;
             }

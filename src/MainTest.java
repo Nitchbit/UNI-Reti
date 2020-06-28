@@ -1,17 +1,41 @@
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import javax.net.ssl.HttpsURLConnection;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.nio.Buffer;
 
 public class MainTest {
     public static void main(String[] args) {
-        Database myDB = new Database();
-
-        ChallengeHandler thread = new ChallengeHandler(myDB, 2000);
-        thread.start();
-
+        BufferedReader rd = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            String word = rd.readLine();
+            while (!word.equals("EXIT")) {
+                URL newUrl = new URL("https://api.mymemory.translated.net/get?q=" + word + "&langpair=it|en");
+                HttpsURLConnection connection = (HttpsURLConnection) newUrl.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Accept", "application/json");
+                if (connection.getResponseCode() != 200) {
+                    throw new RuntimeException("Request failed: " + connection.getResponseCode());
+                }
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String line = reader.readLine();
+                JSONParser parser = new JSONParser();
+                JSONObject o = (JSONObject) parser.parse(line);
+                JSONObject obj = (JSONObject) o.get("responseData");
+                System.out.println(obj.get("translatedText").toString().toLowerCase());
+                connection.disconnect();
+                word = rd.readLine();
+            }
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
         /*
 
         String userInput1 = null, userInput2 = null;
