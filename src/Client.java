@@ -1,7 +1,6 @@
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
@@ -14,18 +13,26 @@ import java.util.ArrayList;
 
 public class Client {
     public static RegRemoteInterface userReg;
+    //socket for communications
     private Socket sockTCP;
+    //port for notification
     private int portUDP;
+    //port for communications
     private static int portSocket = 6000;
+    //RMI port
     private static int portRMI = 7000;
+    //server address
     private static String serverInetAddress = "localhost";
     private BufferedWriter writer;
     private BufferedReader reader;
-    private String userNickname;
+    public String userNickname;
+    //GUI view
     private static RegLogView reglogView;
     private static MainView mainView;
+    private static ChallengeView challengeView;
 
     public static void main(String[] args) {
+        //building RMI service
         Registry reg;
         Remote remObject;
         try {
@@ -35,13 +42,13 @@ public class Client {
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
         }
-
-        //Graphic Interface Starting
+        //Graphic Interface Setting
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //starting the first view
         new StartingView();
     }
 
@@ -55,17 +62,27 @@ public class Client {
         mainView.setInstance(this);
     }
 
+    public void gotoChallenge() {
+        challengeView = new ChallengeView();
+        challengeView.setInstance(this);
+    }
+
     public ReturnCodes.Codex login(String nickname, String passwd) {
         ReturnCodes.Codex result = null;
         try {
+            //creating socket
             sockTCP = new Socket(serverInetAddress, portSocket);
+            //creating port for notifications
+            portUDP = (int) ((Math.random() * (65535 - 1024) + 1) + 1024);
             writer = new BufferedWriter(new OutputStreamWriter(sockTCP.getOutputStream()));
             reader= new BufferedReader(new InputStreamReader(sockTCP.getInputStream()));
 
-            writer.write("Login " + nickname + " " + passwd + " " + sockTCP.getInetAddress().getHostAddress());
+            //sending request to server
+            writer.write("Login " + nickname + " " + passwd + " " + sockTCP.getInetAddress().getHostAddress() + " " + portUDP);
             writer.newLine();
             writer.flush();
 
+            //response
             result = ReturnCodes.toCodex(reader.readLine());
             if(!result.equals(ReturnCodes.Codex.SUCCESS)) {
                 sockTCP.close();
@@ -76,12 +93,14 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //manage thread for notifications
         this.userNickname = nickname;
         return result;
     }
 
     public ReturnCodes.Codex logout() {
         try {
+            //sending request to server
             writer.write("Logout " + userNickname);
             writer.newLine();
             writer.flush();
@@ -94,6 +113,7 @@ public class Client {
 
     public ReturnCodes.Codex addFriend(String nickname) {
         try {
+            //sending request to server
             writer.write("Add " + userNickname + " " + nickname);
             writer.newLine();
             writer.flush();
@@ -106,10 +126,12 @@ public class Client {
 
     public ArrayList<String> listFriend() {
         try {
+            //sending request to server
             writer.write("List " + userNickname);
             writer.newLine();
             writer.flush();
 
+            //response
             JsonArray arrayTmp = new JsonParser().parse(reader.readLine()).getAsJsonArray();
             ArrayList<String> list = new ArrayList<>();
             for(int i=0; i<arrayTmp.size(); i++) {
@@ -124,6 +146,7 @@ public class Client {
 
     public int score() {
         try {
+            //sending request to server
             writer.write("Score " + userNickname);
             writer.newLine();
             writer.flush();
@@ -137,10 +160,12 @@ public class Client {
 
     public ArrayList<String> rank() {
         try {
+            //sending request to server
             writer.write("Rank " + userNickname);
             writer.newLine();
             writer.flush();
 
+            //response
             JsonArray arrayTmp = new JsonParser().parse(reader.readLine()).getAsJsonArray();
             ArrayList<String> list = new ArrayList<>();
             for(int i=0; i<arrayTmp.size(); i++) {
@@ -152,5 +177,18 @@ public class Client {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public ReturnCodes.Codex challenge(String nickname) {
+        try {
+            //sending request to server
+            writer.write("Challenge " + userNickname + " " + nickname);
+            writer.newLine();
+            writer.flush();
+            return ReturnCodes.toCodex(reader.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ReturnCodes.Codex.SUCCESS;
     }
 }

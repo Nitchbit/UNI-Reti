@@ -23,9 +23,11 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data.json" beforeDir="false" afterPath="$PROJECT_DIR$/data.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ChallengeHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ChallengeHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ClientHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MainTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MainTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MainView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RegLogView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RegLogView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,13 +121,13 @@
       <screen x="1280" y="0" width="1920" height="1080" />
     </state>
     <state x="1280" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog/1280.0.1920.1080/0.360.1280.720@1280.0.1920.1080" timestamp="1592841896247" />
-    <state x="2056" y="129" width="374" height="592" key="#com.intellij.ide.util.MemberChooser" timestamp="1593253203827">
+    <state x="2056" y="129" width="374" height="592" key="#com.intellij.ide.util.MemberChooser" timestamp="1593356390727">
       <screen x="1366" y="0" width="1920" height="1080" />
     </state>
     <state x="491" y="92" width="374" height="592" key="#com.intellij.ide.util.MemberChooser/0.0.1366.768@0.0.1366.768" timestamp="1592490861943" />
     <state x="2056" y="129" key="#com.intellij.ide.util.MemberChooser/0.312.1366.720/1366.0.1920.1080@1366.0.1920.1080" timestamp="1592664148677" />
     <state x="1970" y="129" width="374" height="592" key="#com.intellij.ide.util.MemberChooser/1280.0.1920.1080/0.360.1280.720@1280.0.1920.1080" timestamp="1592839374599" />
-    <state x="2056" y="129" width="374" height="592" key="#com.intellij.ide.util.MemberChooser/1366.0.1920.1080/0.312.1366.768@1366.0.1920.1080" timestamp="1593253203827" />
+    <state x="2056" y="129" width="374" height="592" key="#com.intellij.ide.util.MemberChooser/1366.0.1920.1080/0.312.1366.768@1366.0.1920.1080" timestamp="1593356390727" />
     <state x="1554" y="308" width="525" height="424" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1592841847933">
       <screen x="1280" y="0" width="1920" height="1080" />
     </state>

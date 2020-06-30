@@ -60,6 +60,11 @@ public class MainView {
         rank.addActionListener(new Rank());
         panel.add(rank);
 
+        JButton challenge = new JButton("Challenge");
+        challenge.setBounds(20, 180, 120, 25);
+        challenge.addActionListener(new Challenge());
+        panel.add(challenge);
+
         frame.setVisible(true);
     }
 
@@ -104,6 +109,17 @@ public class MainView {
         public void actionPerformed(ActionEvent e) {
             ArrayList<String> result = clientInstance.rank();
             label.setText(String.valueOf(result).replaceAll("\"", ""));
+        }
+    }
+
+    public class Challenge implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ReturnCodes.Codex result = clientInstance.challenge(friendField.getText());
+            if(result.equals(ReturnCodes.Codex.SUCCESS)) {
+                clientInstance.gotoChallenge();
+            }
         }
     }
 }

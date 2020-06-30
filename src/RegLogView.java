@@ -13,6 +13,7 @@ public class RegLogView {
     private JFrame frame;
     private JPanel panel;
 
+    //settings the client reference
     public void setInstance(Client user) {
         this.clientInstance = user;
     }

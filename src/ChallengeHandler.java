@@ -45,14 +45,17 @@ public class ChallengeHandler extends Thread {
     private Database database;
     private static int kWords;
     private static int timer;
+
     //atomic variable to know if the client has finished
     private volatile AtomicInteger users;
     public volatile AtomicInteger timeout;
 
+    //points
     private int correct = 5;
     private int wrong = -3;
     private int bonus = 3;
 
+    //class used to represent user during the challenge
     private class Item {
         private String username;
         private int challengePoints;
@@ -108,6 +111,7 @@ public class ChallengeHandler extends Thread {
         }
     }
 
+    //constructor
     public ChallengeHandler(Database database, int port) {
         this.sharedPort = port;
         this.database = database;
@@ -118,6 +122,7 @@ public class ChallengeHandler extends Thread {
     }
 
     public void run() {
+        //reading italian words from the dictionary
         try {
             Gson greader = new Gson();
             FileReader rd = new FileReader("./dictionary.json");
@@ -127,10 +132,13 @@ public class ChallengeHandler extends Thread {
             e.printStackTrace();
             return;
         }
+        //chosign k words
         kWords = (int) ((Math.random() * (16 - 5 + 1) + 5));
         for(int i = 0; i < kWords; i++) {
             chosenWords.add(String.valueOf(wordArray.get((int) ((Math.random() * wordArray.size())))).replaceAll("\"",""));
         }
+
+        //creating socket
         try {
             serverSocketChannel = ServerSocketChannel.open();
             //configuring non-blocking
@@ -145,6 +153,7 @@ public class ChallengeHandler extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //if there are two user connected and this thread is active
         while(users.get() != 2 && !Thread.currentThread().isInterrupted()) {
             try {
                 //waiting on select
@@ -155,6 +164,8 @@ public class ChallengeHandler extends Thread {
             //set of ready channels
             Set<SelectionKey> ready = selector.selectedKeys();
             Iterator<SelectionKey> itr = ready.iterator();
+
+            //checking each key
             while(itr.hasNext()) {
                 SelectionKey key = (SelectionKey) itr.next();
                 itr.remove();
@@ -169,22 +180,28 @@ public class ChallengeHandler extends Thread {
                         clientkeys.add(cKey);
                         if(englishWords == null) {
                             englishWords = new ArrayList<>();
+                            //getting translation of each word
                             getTranslation();
+                            //creating the timer for the challenge
                             new MyTimer(kWords * 2, this);
                         }
                     }
                     if(key.isReadable()) {
+                        //retrieving the channel that is readable
                         SocketChannel client = (SocketChannel) key.channel();
+                        //retrieving the user state attached
                         Item newItem = (Item) key.attachment();
                         String token = "";
+                        //retrieving word if present
                         if(newItem.getWord() != null) token = newItem.getWord();
-                        ByteBuffer toRead =ByteBuffer.allocate(1024);
+                        ByteBuffer toRead = ByteBuffer.allocate(1024);
                         toRead.clear();
                         int byteRed = client.read(toRead);
                         //check if the buffer is full
                         if(byteRed == 1024) {
                             toRead.flip();
                             token = token + StandardCharsets.UTF_8.decode(toRead).toString();
+                            //setting the remaining word and re-attaching the item
                             newItem.setWord(token);
                             key.attach(newItem);
                         }
@@ -217,11 +234,13 @@ public class ChallengeHandler extends Thread {
                         }
                     }
                     if(key.isWritable()) {
+                        //retrieving the channel that is writable
                         SocketChannel client = (SocketChannel) key.channel();
+                        //retrieving the user state attached
                         Item newItem = (Item) key.attachment();
                         //check if there is something else to write
                         if(newItem.getWord() == null) {
-                            //set the new word if no one has terminated or the time is over
+                            //set the new word if no one has terminated or the time is not over
                             if(newItem.getIndex() < kWords && users.get() != 1 && timeout.get() == 0) {
                                 newItem.setWord(chosenWords.get(newItem.getIndex()));
                             }
@@ -308,6 +327,7 @@ public class ChallengeHandler extends Thread {
 
     //function to get the translation
     public void getTranslation() throws IOException {
+        //httl request for each word to be translated
         for(int i = 0; i < kWords; i++) {
             URL newUrl = new URL("https://api.mymemory.translated.net/get?q=" + chosenWords.get(i) + "&langpair=it|en");
             HttpsURLConnection connection = (HttpsURLConnection) newUrl.openConnection();
@@ -316,6 +336,7 @@ public class ChallengeHandler extends Thread {
             if(connection.getResponseCode() != 200) {
                 throw new RuntimeException("Request failed: " + connection.getResponseCode());
             }
+            //if request does not fail
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String line = reader.readLine();
             try {
