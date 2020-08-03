@@ -3,6 +3,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javax.swing.*;
 import java.io.*;
+import java.net.DatagramSocket;
 import java.net.Socket;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -15,6 +16,7 @@ public class Client {
     public static RegRemoteInterface userReg;
     //socket for communications
     private Socket sockTCP;
+    private DatagramSocket UDPSocket;
     //port for notification
     private int portUDP;
     //port for communications
@@ -26,6 +28,9 @@ public class Client {
     private BufferedWriter writer;
     private BufferedReader reader;
     public String userNickname;
+    //challenge port
+    public int challengePort;
+    private Notify notificationThread;
     //GUI view
     private static RegLogView reglogView;
     private static MainView mainView;
@@ -60,6 +65,7 @@ public class Client {
     public void gotoMainView() {
         mainView = new MainView();
         mainView.setInstance(this);
+        notificationThread.setView(mainView);
     }
 
     public void gotoChallenge() {
@@ -93,7 +99,8 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //manage thread for notifications
+        notificationThread = new Notify(this, UDPSocket);
+        notificationThread.start();
         this.userNickname = nickname;
         return result;
     }

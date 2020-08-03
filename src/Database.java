@@ -13,7 +13,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 public class Database extends RemoteServer implements RegRemoteInterface {
-    //class that rappresent the user
+    //class that identify the user
     public class DataObject {
         private String passwd;
         private transient boolean onlineStatus;
@@ -75,7 +75,7 @@ public class Database extends RemoteServer implements RegRemoteInterface {
             return this.UDPport;
         }
     }
-    //class that rappresent users in the rank
+    //class that identify users in the rank
     private class UserRank implements Comparable<UserRank> {
         public String nickname;
         public int score;

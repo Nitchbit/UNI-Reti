@@ -5,8 +5,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Arrays;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +13,9 @@ public class Server {
     private static ThreadPoolExecutor exec;
     private static LinkedBlockingQueue<Runnable> queue;
 
+    //connection port socket
     private static int portSocket = 6000;
+    //RMI service port
     private static int portRMI = 7000;
     private static final String address = "localhost";
 

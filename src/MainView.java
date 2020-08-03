@@ -2,18 +2,52 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 public class MainView {
     private Client clientInstance;
+    private Notify notifyInstance;
+
+    private ArrayList<Notification> notifications = new ArrayList<>();
 
     JFrame frame;
     JPanel panel;
     JTextField friendField;
     JLabel label;
 
-    public void setInstance(Client user) {
+    public void setInstance(Client user, Notify notify) {
         this.clientInstance = user;
+        this.notifyInstance = notify;
+    }
+
+    //settare punti,nome
+    //funzioni per gestire la gui delle notifiche
+
+    public class Notification {
+        InetAddress address;
+        int TCPPort;
+        int UDPPort;
+        String username;
+
+        public Notification (String username, InetAddress address, int TCPPort, int UDPPort) {
+            this.address = address;
+            this.TCPPort = TCPPort;
+            this.UDPPort = UDPPort;
+            this.username = username;
+        }
+    }
+
+    public void addNote (String username, InetAddress address, int TCPPort, int UDPPort) {
+        notifications.add(new Notification(username, address, TCPPort, UDPPort));
+        //...
+    }
+    public void removeNote (String username) {
+        for (int i = 0; i < notifications.size(); i++) {
+            if (notifications.get(i).username.equals(username)) {
+                notifications.remove(i);
+            }
+        }
     }
 
     public MainView() {
