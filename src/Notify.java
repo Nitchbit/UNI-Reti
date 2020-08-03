@@ -23,7 +23,7 @@ public class Notify extends Thread {
 
             while (true) {
                 UDPSocket.receive(receivedPack);
-                String line = new String((receivedPack.getData(), 0, receivedPack.getLength()));
+                String line = new String(receivedPack.getData(), 0, receivedPack.getLength());
                 String[] token = line.split(" ");
 
                 //received messages
