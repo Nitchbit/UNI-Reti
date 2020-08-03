@@ -21,6 +21,9 @@ public class MainView {
         this.notifyInstance = notify;
     }
 
+    public void setInstance(Client client) {
+    }
+
     //settare punti,nome
     //funzioni per gestire la gui delle notifiche
 

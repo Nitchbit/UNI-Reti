@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="StartView">
+  <grid id="27dc6" binding="panelView" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="987" height="508"/>
+    </constraints>
+    <properties>
+      <background color="-16449406"/>
+      <focusable value="false"/>
+      <font name="OpenDyslexicAlta" size="36" style="1"/>
+      <preferredSize width="575" height="350"/>
+    </properties>
+    <border type="etched"/>
+    <children>
+      <component id="fe6a4" class="javax.swing.JLabel" binding="mainMSG1">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="300" height="79"/>
+          </grid>
+        </constraints>
+        <properties>
+          <alignmentX value="0.0"/>
+          <background color="-16449406"/>
+          <doubleBuffered value="false"/>
+          <enabled value="true"/>
+          <font name="OpenDyslexicMono" size="48" style="1"/>
+          <foreground color="-657931"/>
+          <opaque value="true"/>
+          <requestFocusEnabled value="false"/>
+          <text value="WORLD QUIZZLE"/>
+          <verticalAlignment value="1"/>
+        </properties>
+      </component>
+      <component id="e3ad6" class="javax.swing.JLabel" binding="mainMSG">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="2" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="275" height="100"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-16449406"/>
+          <font name="OpenDyslexicMono" size="48" style="1"/>
+          <foreground color="-657931"/>
+          <opaque value="true"/>
+          <text value="WELCOME TO"/>
+          <verticalAlignment value="3"/>
+        </properties>
+      </component>
+      <component id="f8cf8" class="javax.swing.JButton" binding="mainButton">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="100" height="60"/>
+          </grid>
+        </constraints>
+        <properties>
+          <alignmentY value="0.0"/>
+          <background color="-16734973"/>
+          <borderPainted value="true"/>
+          <contentAreaFilled value="true"/>
+          <defaultCapable value="true"/>
+          <enabled value="true"/>
+          <focusCycleRoot value="false"/>
+          <focusPainted value="false"/>
+          <font name="Michroma" size="20" style="1"/>
+          <foreground color="-16777216"/>
+          <horizontalTextPosition value="0"/>
+          <iconTextGap value="4"/>
+          <inheritsPopupMenu value="true"/>
+          <margin top="0" left="0" bottom="0" right="0"/>
+          <requestFocusEnabled value="true"/>
+          <rolloverEnabled value="false"/>
+          <selected value="false"/>
+          <text value="Start"/>
+          <verifyInputWhenFocusTarget value="true"/>
+          <visible value="true"/>
+        </properties>
+        <clientProperties>
+          <hideActionText class="java.lang.Boolean" value="false"/>
+        </clientProperties>
+      </component>
+    </children>
+  </grid>
+</form>

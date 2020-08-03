@@ -49,12 +49,22 @@ public class Client {
         }
         //Graphic Interface Setting
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            // If Nimbus is not available, fall back to cross-platform
+            try {
+                UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            } catch (Exception ex) {
+                // not worth my time
+            }
         }
         //starting the first view
-        new StartingView();
+        new StartView();
     }
 
     public void gotoRegLogView() {
@@ -64,7 +74,7 @@ public class Client {
 
     public void gotoMainView() {
         mainView = new MainView();
-        mainView.setInstance(this);
+        mainView.setInstance(this, notificationThread);
         notificationThread.setView(mainView);
     }
 
