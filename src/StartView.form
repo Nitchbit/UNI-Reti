@@ -28,7 +28,7 @@
           <foreground color="-657931"/>
           <opaque value="true"/>
           <requestFocusEnabled value="false"/>
-          <text value="WORLD QUIZZLE"/>
+          <text value="WORD QUIZZLE"/>
           <verticalAlignment value="1"/>
         </properties>
       </component>

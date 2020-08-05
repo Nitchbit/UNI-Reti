@@ -68,8 +68,8 @@ public class ClientHandler implements Runnable{
                     writer.flush();
                 }
                 //if client wants to challenge a friend
-                else if(tokenParams[0].equals("Challenge") && tokenParams.length == 5) {
-                    //creating tcp port for the challange
+                else if(tokenParams[0].equals("Challenge") && tokenParams.length == 3) {
+                    //creating tcp port for the challenge
                     int challengeTCPport = (int) ((Math.random() * ((65535 -1024) +1)) + 1024);
                     //setting thread for the challenge and starting it
                     ChallengeHandler challenge = new ChallengeHandler(dataStructure, challengeTCPport);

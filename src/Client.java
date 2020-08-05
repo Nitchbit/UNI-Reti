@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.io.*;
 import java.net.DatagramSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -32,7 +33,7 @@ public class Client {
     public int challengePort;
     private Notify notificationThread;
     //GUI view
-    private static RegLogView reglogView;
+    private static AccessView reglogView;
     private static MainView mainView;
     private static ChallengeView challengeView;
 
@@ -68,7 +69,7 @@ public class Client {
     }
 
     public void gotoRegLogView() {
-        reglogView = new RegLogView();
+        reglogView = new AccessView();
         reglogView.setInstance(this);
     }
 
@@ -109,8 +110,14 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        try {
+            UDPSocket = new DatagramSocket(portUDP);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
         notificationThread = new Notify(this, UDPSocket);
         notificationThread.start();
+        System.out.println("Notify ready");
         this.userNickname = nickname;
         return result;
     }
@@ -121,6 +128,7 @@ public class Client {
             writer.write("Logout " + userNickname);
             writer.newLine();
             writer.flush();
+            if (notificationThread.isAlive()) UDPSocket.close();
             return ReturnCodes.toCodex(reader.readLine());
         } catch (IOException e) {
             e.printStackTrace();
@@ -187,7 +195,7 @@ public class Client {
             ArrayList<String> list = new ArrayList<>();
             for(int i=0; i<arrayTmp.size(); i++) {
                 JsonObject item = arrayTmp.get(i).getAsJsonObject();
-                list.add(item.get("nickname").toString() + ": " + item.get("score").toString());
+                list.add(item.get("nickname").toString() + ":   " + item.get("score").toString());
             }
             return list;
         } catch (IOException e) {

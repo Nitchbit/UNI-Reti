@@ -24,6 +24,7 @@ public class Notify extends Thread {
             while (true) {
                 UDPSocket.receive(receivedPack);
                 String line = new String(receivedPack.getData(), 0, receivedPack.getLength());
+                System.out.println(line);
                 String[] token = line.split(" ");
 
                 //received messages
@@ -31,11 +32,10 @@ public class Notify extends Thread {
                     address = receivedPack.getAddress();
                     UDPPort = receivedPack.getPort();
 
-                    //add notification to the view
+                    myMainView.addNote(token[1], address, Integer.parseInt(token[2]), UDPPort);
                 }
                 if (token[0].equals("Timeout") && token.length == 2) {
-
-                    //remove notification to the view
+                    myMainView.removeNote(token[1]);
                 }
                 if (token[0].equals("Accepted") && token.length == 2) {
                     //setting challenge's port
@@ -48,6 +48,8 @@ public class Notify extends Thread {
                     //print to the view
                 }
             }
+        } catch (SocketException e) {
+            System.out.println("Socket is closed");
         } catch (IOException e) {
             e.printStackTrace();
         }
