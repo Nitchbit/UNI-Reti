@@ -1,0 +1,24 @@
+{
+  "Marco": {
+    "passwd": "marco",
+    "score": 0,
+    "friendList": [
+      "Alice"
+    ]
+  },
+  "Nico": {
+    "passwd": "nico",
+    "score": 0,
+    "friendList": [
+      "Alice"
+    ]
+  },
+  "Alice": {
+    "passwd": "alice",
+    "score": 0,
+    "friendList": [
+      "Nico",
+      "Marco"
+    ]
+  }
+}

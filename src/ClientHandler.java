@@ -85,6 +85,7 @@ public class ClientHandler implements Runnable{
                     }
                     else {
                         //writing response to client
+                        System.out.println(ReturnCodes.toMessage(result));
                         writer.write(ReturnCodes.toMessage(result));
                         writer.newLine();
                         writer.flush();

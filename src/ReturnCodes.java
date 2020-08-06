@@ -67,6 +67,8 @@ public class ReturnCodes {
                 return Codex.SUCCESS;
             case "COMMAND_NOT_FOUND":
                 return Codex.COMMAND_NOT_FOUND;
+            case "Request succeeded":
+                return Codex.SUCCESS;
             default:
                 return Codex.UNKNOWN_CODE;
 

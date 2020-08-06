@@ -1,17 +1,21 @@
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class MainView {
     private JFrame frame;
 
     private Client clientInstance;
     private Notify notifyInstance;
+    private String username;
 
     private ArrayList<Notification> notifications = new ArrayList<>();
 
@@ -24,22 +28,27 @@ public class MainView {
     private JButton challengeButton;
     private JButton scoreButton;
 
-    public JTextArea listArea;
+    private JScrollPane listPane;
+    private JTextArea listArea;
     private JTextField nameField;
 
     private JLabel scoreLabel;
-    private JScrollPane listPane;
-
-    private JList<String> noteList;
     private JScrollPane notePane;
+    private JList<String> noteList;
+    private JLabel nameLabel;
+    private JLabel errorLabel;
+
     private JLabel noteLabel;
 
-    final DefaultListModel<String> list = new DefaultListModel<>();
+    private Vector<String> list = new Vector<>();
 
     //settings the client reference
-    public void setInstance(Client user, Notify notify) {
+    public void setInstance(Client user, Notify notify, String username) {
         this.clientInstance = user;
         this.notifyInstance = notify;
+        this.username = username;
+
+        nameLabel.setText(username);
     }
 
     {
@@ -62,20 +71,6 @@ public class MainView {
         mainPanel.setBackground(new Color(-16449406));
         mainPanel.setPreferredSize(new Dimension(575, 350));
         mainPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        fListButton = new JButton();
-        fListButton.setBackground(new Color(-10855073));
-        Font fListButtonFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, fListButton.getFont());
-        if (fListButtonFont != null) fListButton.setFont(fListButtonFont);
-        fListButton.setForeground(new Color(-16777216));
-        fListButton.setText("Friends  ");
-        mainPanel.add(fListButton, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(45, 30), null, 0, false));
-        ranking = new JButton();
-        ranking.setBackground(new Color(-10855073));
-        Font rankingFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, ranking.getFont());
-        if (rankingFont != null) ranking.setFont(rankingFont);
-        ranking.setForeground(new Color(-16777216));
-        ranking.setText("Ranking");
-        mainPanel.add(ranking, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(45, 30), null, 0, false));
         addFriend = new JButton();
         addFriend.setBackground(new Color(-10855073));
         Font addFriendFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, addFriend.getFont());
@@ -99,7 +94,7 @@ public class MainView {
         challengeButton.setText("Challange");
         mainPanel.add(challengeButton, new com.intellij.uiDesigner.core.GridConstraints(1, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(45, 25), null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
-        mainPanel.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(3, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        mainPanel.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(3, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         signOutButton = new JButton();
         signOutButton.setBackground(new Color(-5296384));
         Font signOutButtonFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, signOutButton.getFont());
@@ -120,26 +115,62 @@ public class MainView {
         scoreLabel.setForeground(new Color(-16777216));
         scoreLabel.setText("");
         mainPanel.add(scoreLabel, new com.intellij.uiDesigner.core.GridConstraints(5, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(40, 25), null, 0, false));
+        final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
+        mainPanel.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(4, 2, 4, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        notePane = new JScrollPane();
+        notePane.setBackground(new Color(-10855073));
+        notePane.setName("");
+        notePane.setVerifyInputWhenFocusTarget(true);
+        notePane.setVerticalScrollBarPolicy(20);
+        mainPanel.add(notePane, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 4, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        noteList = new JList<String>();
+        noteList.setBackground(new Color(-10855073));
+        noteList.setName("");
+        noteList.setSelectionMode(0);
+        notePane.setViewportView(noteList);
         listPane = new JScrollPane();
         listPane.setBackground(new Color(-10855073));
-        listPane.setVerticalScrollBarPolicy(22);
-        mainPanel.add(listPane, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 7, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        listPane.setVerticalScrollBarPolicy(20);
+        mainPanel.add(listPane, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 6, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         listArea = new JTextArea();
         listArea.setBackground(new Color(-10855073));
+        listArea.setEditable(false);
         Font listAreaFont = this.$$$getFont$$$("Michroma", Font.BOLD, 14, listArea.getFont());
         if (listAreaFont != null) listArea.setFont(listAreaFont);
         listArea.setForeground(new Color(-16777216));
         listPane.setViewportView(listArea);
-        notePane = new JScrollPane();
-        notePane.setBackground(new Color(-10855073));
-        notePane.setVerticalScrollBarPolicy(22);
-        mainPanel.add(notePane, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 4, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        noteLabel = new JLabel();
-        noteLabel.setBackground(new Color(-10855073));
-        noteLabel.setText("");
-        notePane.setViewportView(noteLabel);
-        final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
-        mainPanel.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(4, 2, 4, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        fListButton = new JButton();
+        fListButton.setBackground(new Color(-10855073));
+        Font fListButtonFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, fListButton.getFont());
+        if (fListButtonFont != null) fListButton.setFont(fListButtonFont);
+        fListButton.setForeground(new Color(-16777216));
+        fListButton.setText("Friends  ");
+        mainPanel.add(fListButton, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(45, 30), null, 0, false));
+        ranking = new JButton();
+        ranking.setBackground(new Color(-10855073));
+        Font rankingFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, ranking.getFont());
+        if (rankingFont != null) ranking.setFont(rankingFont);
+        ranking.setForeground(new Color(-16777216));
+        ranking.setText("Ranking");
+        mainPanel.add(ranking, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(45, 30), null, 0, false));
+        nameLabel = new JLabel();
+        nameLabel.setBackground(new Color(-10855073));
+        Font nameLabelFont = this.$$$getFont$$$("OpenDyslexic", Font.BOLD, 18, nameLabel.getFont());
+        if (nameLabelFont != null) nameLabel.setFont(nameLabelFont);
+        nameLabel.setForeground(new Color(-16777216));
+        nameLabel.setHorizontalAlignment(0);
+        nameLabel.setHorizontalTextPosition(0);
+        nameLabel.setOpaque(true);
+        nameLabel.setText("");
+        mainPanel.add(nameLabel, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        errorLabel = new JLabel();
+        Font errorLabelFont = this.$$$getFont$$$("Inter Extra Bold", Font.BOLD, 14, errorLabel.getFont());
+        if (errorLabelFont != null) errorLabel.setFont(errorLabelFont);
+        errorLabel.setForeground(new Color(-6619134));
+        errorLabel.setText("");
+        mainPanel.add(errorLabel, new com.intellij.uiDesigner.core.GridConstraints(2, 3, 2, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final com.intellij.uiDesigner.core.Spacer spacer3 = new com.intellij.uiDesigner.core.Spacer();
+        mainPanel.add(spacer3, new com.intellij.uiDesigner.core.GridConstraints(4, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
     /**
@@ -184,18 +215,20 @@ public class MainView {
 
     public void addNote(String username, InetAddress address, int TCPPort, int UDPPort) {
         notifications.add(new MainView.Notification(username, address, TCPPort, UDPPort));
-        list.addElement("Challenge from " + username);
-        noteList = new JList<String>(list);
+        list.add("Challenged by " + username);
+        noteList.setListData(list);
     }
 
-    public void removeNote(String username) {
+    public Notification removeNote(String username) {
+        Notification removed = null;
         for (int i = 0; i < notifications.size(); i++) {
             if (notifications.get(i).username.equals(username)) {
-                notifications.remove(i);
-                list.removeElement("Challange from " + username);
-                noteList = new JList<String>(list);
+                removed = notifications.remove(i);
+                list.removeElement("Challenged by " + username);
+                noteList.setListData(list);
             }
         }
+        return removed;
     }
 
     public MainView() {
@@ -213,6 +246,26 @@ public class MainView {
         challengeButton.addActionListener(new ChallengeAction());
         scoreButton.addActionListener(new ScoreAction());
 
+        noteList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                String line = noteList.getSelectedValue();
+                Object[] option = {"Accept", "Decline"};
+                Object selection = JOptionPane.showOptionDialog(frame, null, null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, option, option[0]);
+                if (selection.equals(option[0])) {
+                    String[] token = line.split(" ");
+                    Notification rem = removeNote(token[2]);
+                    notifyInstance.accept(rem.address, rem.UDPPort);
+                    clientInstance.challengePort = rem.TCPPort;
+                    //go to game
+                }
+                if (selection.equals(option[1])) {
+                    String[] token = line.split(" ");
+                    Notification rem = removeNote(token[2]);
+                    notifyInstance.decline(rem.address, rem.UDPPort);
+                }
+            }
+        });
 
         frame.setVisible(true);
     }
@@ -257,7 +310,10 @@ public class MainView {
     public class AddAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            clientInstance.addFriend(nameField.getText());
+            ReturnCodes.Codex result = clientInstance.addFriend(nameField.getText());
+            if (!result.equals(ReturnCodes.Codex.SUCCESS)) {
+                errorLabel.setText(ReturnCodes.toMessage(result));
+            }
         }
     }
 
@@ -265,7 +321,7 @@ public class MainView {
         @Override
         public void actionPerformed(ActionEvent e) {
             ReturnCodes.Codex result = clientInstance.challenge(nameField.getText());
-            System.out.println(ReturnCodes.toMessage(result));
+            errorLabel.setText(ReturnCodes.toMessage(result));
         }
     }
 

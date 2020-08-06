@@ -75,7 +75,7 @@ public class Client {
 
     public void gotoMainView() {
         mainView = new MainView();
-        mainView.setInstance(this, notificationThread);
+        mainView.setInstance(this, notificationThread, userNickname);
         notificationThread.setView(mainView);
     }
 
@@ -210,6 +210,7 @@ public class Client {
             writer.write("Challenge " + userNickname + " " + nickname);
             writer.newLine();
             writer.flush();
+
             return ReturnCodes.toCodex(reader.readLine());
         } catch (IOException e) {
             e.printStackTrace();
