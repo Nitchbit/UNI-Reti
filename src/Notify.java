@@ -31,21 +31,20 @@ public class Notify extends Thread {
                 if (token[0].equals("Challenge") && token.length == 3) {
                     address = receivedPack.getAddress();
                     UDPPort = receivedPack.getPort();
-
                     myMainView.addNote(token[1], address, Integer.parseInt(token[2]), UDPPort);
                 }
                 if (token[0].equals("Timeout") && token.length == 2) {
                     myMainView.removeNote(token[1]);
                 }
-                if (token[0].equals("Accepted") && token.length == 2) {
+                if (token[0].equals("Accepted") && token.length == 3) {
                     //setting challenge's port
-                    clientFather.challengePort = Integer.parseInt(token[1]);
-
+                    clientFather.words = Integer.parseInt(token[1]);
+                    clientFather.challengePort = Integer.parseInt(token[2]);
                     //start the game view
+                    clientFather.gotoChallengeView();
                 }
                 if (token[0].equals("Declined")) {
-
-                    //print to the view
+                    myMainView.errorLabel.setText("Your request was refused");
                 }
             }
         } catch (SocketException e) {
@@ -62,9 +61,9 @@ public class Notify extends Thread {
     public void accept (InetAddress address, int port) {
         String line = "Accept";
         byte[] buffer = line.getBytes();
-        DatagramPacket myPack = new DatagramPacket(buffer, buffer.length, address, port);
+        DatagramPacket msg = new DatagramPacket(buffer, buffer.length, address, port);
         try {
-            UDPSocket.send(myPack);
+            UDPSocket.send(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,9 +72,9 @@ public class Notify extends Thread {
     public void decline (InetAddress address, int port) {
         String line = "Decline";
         byte[] buffer = line.getBytes();
-        DatagramPacket myPack = new DatagramPacket(buffer, buffer.length, address, port);
+        DatagramPacket msg = new DatagramPacket(buffer, buffer.length, address, port);
         try {
-            UDPSocket.send(myPack);
+            UDPSocket.send(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }

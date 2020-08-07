@@ -35,7 +35,9 @@ public class Client {
     //GUI view
     private static AccessView reglogView;
     private static MainView mainView;
-    private static ChallengeView challengeView;
+    private static ChallengeView gameView;
+
+    public int words;
 
     public static void main(String[] args) {
         //building RMI service
@@ -79,10 +81,12 @@ public class Client {
         notificationThread.setView(mainView);
     }
 
-    public void gotoChallenge() {
-        challengeView = new ChallengeView();
-        challengeView.setInstance(this);
+    public void gotoChallengeView() {
+        gameView = new ChallengeView();
+        gameView.setInstance(this);
+        gameView.setWord(words);
     }
+
 
     public ReturnCodes.Codex login(String nickname, String passwd) {
         ReturnCodes.Codex result = null;
@@ -210,7 +214,6 @@ public class Client {
             writer.write("Challenge " + userNickname + " " + nickname);
             writer.newLine();
             writer.flush();
-
             return ReturnCodes.toCodex(reader.readLine());
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -15,15 +16,28 @@ public class ChallengeView {
     private SocketChannel sockChannel;
     private ByteBuffer buffer;
 
-    JFrame frame;
-    JPanel panel;
-    JLabel italian;
-    JTextField english;
-    JButton send;
-    JLabel label;
+    private int numWord;
+
+    private JFrame frame;
+    private JPanel mainPanel;
+
+    private JTextField englishField;
+    private JTextField ENGLISHTextField;
+
+    private JTextField italianField;
+    private JTextField ITALIANTextField;
+
+    private JButton sendButton;
+    private JProgressBar progressBar;
+    private JLabel errorLabel;
+    private JButton exitButton;
 
     public void setInstance(Client user) {
         this.clientInstance = user;
+    }
+
+    public void setWord(int words) {
+        this.numWord = words;
     }
 
     //socket for the challenge
@@ -57,62 +71,56 @@ public class ChallengeView {
             buffer.flip();
             String[] tok = line.split(" ");
             if(tok[0].equals("End") && tok.length == 3) {
-                label.setText("End, score: " + tok[1] + " " + tok[2]);
+                errorLabel.setText("End, score: " + tok[1] + " " + tok[2]);
+                exitButton.setEnabled(true);
             }
             else if(tok[0].equals("Timeout") && tok.length == 3) {
-                label.setText("Timeout, score: " + tok[1] + " " + tok[2]);
+                errorLabel.setText("Timeout, score: " + tok[1] + " " + tok[2]);
+                exitButton.setEnabled(true);
             }
             else {
-                italian.setText(tok[0]);
+                italianField.setText(tok[0]);
+                progressBar.setValue(100/numWord);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public ChallengeView() {
+    public ChallengeView () {
         frame = new JFrame();
-        frame.setSize(300, 280);
+        frame.setSize(350, 125);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setTitle("Word Quizzle");
 
-        panel = new JPanel();
-        panel.setLayout(null);
-        frame.add(panel);
+        frame.add(mainPanel);
 
-        italian = new JLabel();
-        italian.setBounds(20, 50, 90, 25);
-        panel.add(italian);
-
-        english = new JTextField();
-        english.setBorder(BorderFactory.createEmptyBorder());
-        english.setBounds(20, 80, 90, 25);
-        panel.add(english);
-
-        send = new JButton("Send");
-        send.setBounds(20, 120, 90, 23);
-        send.addActionListener(new Send());
-        panel.add(send);
-
-        label = new JLabel();
-        label.setBounds(140, 120, 400, 50);
-        panel.add(label);
+        sendButton.addActionListener(new SendAction());
+        exitButton.addActionListener(new ExitButton());
 
         frame.setVisible(true);
     }
 
-    public class Send implements ActionListener {
-
+    public class SendAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(!english.getText().isEmpty()) {
-                String lineTmp = clientInstance.userNickname + " " + english.getText();
+            if(!englishField.getText().isEmpty()) {
+                String lineTmp = clientInstance.userNickname + " " + englishField.getText();
                 buffer = ByteBuffer.wrap(lineTmp.getBytes());
                 buffer.clear();
                 buffer.flip();
-                italian.setText("");
+                italianField.setText("");
                 myRead();
             }
+            else {
+                errorLabel.setText("Fill the field");
+            }
+        }
+    }
+    public class ExitButton implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
         }
     }
 }

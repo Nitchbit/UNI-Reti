@@ -2,6 +2,7 @@ import com.google.gson.JsonArray;
 
 import java.io.*;
 import java.net.*;
+import java.util.Arrays;
 
 public class ClientHandler implements Runnable{
     private Database dataStructure;
@@ -37,7 +38,7 @@ public class ClientHandler implements Runnable{
                     ReturnCodes.Codex result = dataStructure.userLogin(tokenParams[1], tokenParams[2], InetAddress.getByName(tokenParams[3]), Integer.parseInt(tokenParams[4]));
 
                     //writing response to client
-                    writer.write(String.valueOf(result));
+                    writer.write(ReturnCodes.toMessage(result));
                     writer.newLine();
                     writer.flush();
 
@@ -73,6 +74,7 @@ public class ClientHandler implements Runnable{
                     int challengeTCPport = (int) ((Math.random() * ((65535 -1024) +1)) + 1024);
                     //setting thread for the challenge and starting it
                     ChallengeHandler challenge = new ChallengeHandler(dataStructure, challengeTCPport);
+                    System.out.println("Thread challenge is starting");
                     challenge.start();
 
                     ReturnCodes.Codex result = dataStructure.userChallenge(tokenParams[1], tokenParams[2], clientUDPSock, challengeTCPport);
@@ -85,7 +87,6 @@ public class ClientHandler implements Runnable{
                     }
                     else {
                         //writing response to client
-                        System.out.println(ReturnCodes.toMessage(result));
                         writer.write(ReturnCodes.toMessage(result));
                         writer.newLine();
                         writer.flush();
@@ -93,26 +94,27 @@ public class ClientHandler implements Runnable{
                         byte[] buffer = new byte[1024];
                         DatagramPacket received = new DatagramPacket(buffer, buffer.length);
                         //setting waiting timeout for a challenge's response
-                        clientUDPSock.setSoTimeout(25000);
+                        clientUDPSock.setSoTimeout(20000);
                         try {
                             clientUDPSock.receive(received);
                         }
                         //if time is over
                         catch (SocketTimeoutException e) {
                             //sending declined to the challenger
-                            dataStructure.challengeRequestResult(tokenParams[1], tokenParams[2], "Declined", clientUDPSock, challengeTCPport);
+                            dataStructure.challengeRequestResult(tokenParams[1], tokenParams[2], "Declined", clientUDPSock, challengeTCPport, 0);
                             //sending timeout to the challenged
-                            dataStructure.challengeRequestResult(tokenParams[1], tokenParams[2], "Timeout", clientUDPSock, challengeTCPport);
+                            dataStructure.challengeRequestResult(tokenParams[1], tokenParams[2], "Timeout", clientUDPSock, challengeTCPport, 0);
                             //stop challenge handler
                             if(challenge.isAlive()) challenge.interrupt();
                         }
                         //checking the response
                         String line = new String(received.getData(), 0, received.getLength());
                         String[] tok = line.split(" ");
-                        if(tok[0].equals("Accepted"))
-                            dataStructure.challengeRequestResult(tokenParams[1], tokenParams[2], "Accepted", clientUDPSock, challengeTCPport);
+                        if(tok[0].equals("Accepted")) {
+                            dataStructure.challengeRequestResult(tokenParams[1], tokenParams[2], "Accepted", clientUDPSock, challengeTCPport, challenge.kWords);
+                        }
                         if(tok[0].equals("Declined")) {
-                            dataStructure.challengeRequestResult(tokenParams[1], tokenParams[2], "Declined", clientUDPSock, challengeTCPport);
+                            dataStructure.challengeRequestResult(tokenParams[1], tokenParams[2], "Declined", clientUDPSock, challengeTCPport, 0);
                             if(challenge.isAlive()) challenge.interrupt();
                         }
                     }

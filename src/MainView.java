@@ -33,12 +33,12 @@ public class MainView {
     private JTextField nameField;
 
     private JLabel scoreLabel;
+
     private JScrollPane notePane;
     private JList<String> noteList;
-    private JLabel nameLabel;
-    private JLabel errorLabel;
 
-    private JLabel noteLabel;
+    private JLabel nameLabel;
+    public JLabel errorLabel;
 
     private Vector<String> list = new Vector<>();
 
@@ -246,28 +246,32 @@ public class MainView {
         challengeButton.addActionListener(new ChallengeAction());
         scoreButton.addActionListener(new ScoreAction());
 
-        noteList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                String line = noteList.getSelectedValue();
-                Object[] option = {"Accept", "Decline"};
-                Object selection = JOptionPane.showOptionDialog(frame, null, null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, option, option[0]);
-                if (selection.equals(option[0])) {
-                    String[] token = line.split(" ");
-                    Notification rem = removeNote(token[2]);
-                    notifyInstance.accept(rem.address, rem.UDPPort);
-                    clientInstance.challengePort = rem.TCPPort;
-                    //go to game
-                }
-                if (selection.equals(option[1])) {
-                    String[] token = line.split(" ");
-                    Notification rem = removeNote(token[2]);
-                    notifyInstance.decline(rem.address, rem.UDPPort);
-                }
-            }
-        });
+        noteList.addListSelectionListener(new listAction());
 
         frame.setVisible(true);
+    }
+
+    public class listAction implements ListSelectionListener {
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            errorLabel.setText("");
+            String line = noteList.getSelectedValue();
+            Object[] option = {"Accept", "Decline"};
+            Object selection = JOptionPane.showOptionDialog(frame, null, null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, option, option[0]);
+            if (selection.equals(0)) {
+                String[] token = line.split(" ");
+                Notification rem = removeNote(token[2]);
+                notifyInstance.accept(rem.address, rem.UDPPort);
+                clientInstance.challengePort = rem.TCPPort;
+                //go to game
+                clientInstance.gotoChallengeView();
+            }
+            if (selection.equals(1)) {
+                String[] token = line.split(" ");
+                Notification rem = removeNote(token[2]);
+                notifyInstance.decline(rem.address, rem.UDPPort);
+            }
+        }
     }
 
     public class SignOutAction implements ActionListener {
@@ -281,8 +285,9 @@ public class MainView {
     public class FriendsAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            ArrayList<String> result = clientInstance.listFriend();
+            errorLabel.setText("");
             listArea.setText("");
+            ArrayList<String> result = clientInstance.listFriend();
             String tmpLine = "";
             for (String item : result) {
                 item = item + "\n";
@@ -295,8 +300,9 @@ public class MainView {
     public class RankingAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            ArrayList<String> result = clientInstance.rank();
+            errorLabel.setText("");
             listArea.setText("");
+            ArrayList<String> result = clientInstance.rank();
             String tmpLine = "";
             for (String item : result) {
                 item = item + "\n";
@@ -310,6 +316,7 @@ public class MainView {
     public class AddAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            errorLabel.setText("");
             ReturnCodes.Codex result = clientInstance.addFriend(nameField.getText());
             if (!result.equals(ReturnCodes.Codex.SUCCESS)) {
                 errorLabel.setText(ReturnCodes.toMessage(result));
@@ -320,6 +327,7 @@ public class MainView {
     public class ChallengeAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            errorLabel.setText("");
             ReturnCodes.Codex result = clientInstance.challenge(nameField.getText());
             errorLabel.setText(ReturnCodes.toMessage(result));
         }
@@ -328,6 +336,7 @@ public class MainView {
     public class ScoreAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            scoreLabel.setText("");
             int result = clientInstance.score();
             scoreLabel.setText(String.valueOf(result).replace("[", "").replace("]", ""));
         }

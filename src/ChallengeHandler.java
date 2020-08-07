@@ -43,7 +43,7 @@ public class ChallengeHandler extends Thread {
     private ArrayList<SelectionKey> clientkeys;
 
     private Database database;
-    private static int kWords;
+    public int kWords;
     private static int timer;
 
     //atomic variable to know if the client has finished
@@ -132,7 +132,7 @@ public class ChallengeHandler extends Thread {
             e.printStackTrace();
             return;
         }
-        //chosign k words
+        //chosing k words
         kWords = (int) ((Math.random() * (16 - 5 + 1) + 5));
         for(int i = 0; i < kWords; i++) {
             chosenWords.add(String.valueOf(wordArray.get((int) ((Math.random() * wordArray.size())))).replaceAll("\"",""));

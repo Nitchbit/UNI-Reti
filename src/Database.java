@@ -218,11 +218,11 @@ public class Database extends RemoteServer implements RegRemoteInterface {
         else return ReturnCodes.Codex.USER_NOT_FOUND;
     }
     //challengeRequestResult
-    public void challengeRequestResult(String nickname, String nickfriend, String result, DatagramSocket dataSock, int challengePort) {
+    public void challengeRequestResult(String nickname, String nickfriend, String result, DatagramSocket dataSock, int challengePort, int kwords) {
         String line = result;
         //sending the timeout to the challenged
         if(result.equals("Timeout")) {
-            line = line + " " + nickname;
+            line = line + " by " + nickname;
             DatagramPacket message = new DatagramPacket(line.getBytes(), line.getBytes().length, dataMap.get(nickfriend).getInetAdrress(), dataMap.get(nickfriend).getUDPport());
             try {
                 dataSock.send(message);
@@ -232,7 +232,7 @@ public class Database extends RemoteServer implements RegRemoteInterface {
         }
         else {
             //sending the accepted or declined request to the challenger
-            if (result.equals("Accepted")) line = line + " " + challengePort;
+            if (result.equals("Accepted")) line = line + " " + kwords + " " + challengePort;
             DatagramPacket message = new DatagramPacket(line.getBytes(), line.getBytes().length, dataMap.get(nickname).getInetAdrress(), dataMap.get(nickname).getUDPport());
             try {
                 dataSock.send(message);
