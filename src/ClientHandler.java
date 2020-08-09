@@ -2,13 +2,12 @@ import com.google.gson.JsonArray;
 
 import java.io.*;
 import java.net.*;
-import java.util.Arrays;
 
 public class ClientHandler implements Runnable{
     private Database dataStructure;
     //socket in which server and client communicate
     private Socket clientTCPSock;
-    //socket in which the client get the challange request
+    //socket in which the client get the challenge request
     private DatagramSocket clientUDPSock;
 
     private BufferedReader reader;
@@ -18,17 +17,13 @@ public class ClientHandler implements Runnable{
     public ClientHandler(Database dataStructure, Socket socket) {
         this.dataStructure = dataStructure;
         this.clientTCPSock = socket;
-        try {
-            this.reader = new BufferedReader(new InputStreamReader(clientTCPSock.getInputStream()));
-            this.writer = new BufferedWriter(new OutputStreamWriter(clientTCPSock.getOutputStream()));
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public void run() {
         try {
+            this.reader = new BufferedReader(new InputStreamReader(clientTCPSock.getInputStream()));
+            this.writer = new BufferedWriter(new OutputStreamWriter(clientTCPSock.getOutputStream()));
             //reading client's messages
             String lineTmp = reader.readLine();
             String[] tokenParams = lineTmp.split(" ");

@@ -38,7 +38,6 @@ public class Notify extends Thread {
                 }
                 if (token[0].equals("Accepted") && token.length == 3) {
                     //setting challenge's port
-                    clientFather.words = Integer.parseInt(token[1]);
                     clientFather.challengePort = Integer.parseInt(token[2]);
                     //start the game view
                     clientFather.gotoChallengeView();
@@ -59,7 +58,7 @@ public class Notify extends Thread {
     }
 
     public void accept (InetAddress address, int port) {
-        String line = "Accept";
+        String line = "Accepted";
         byte[] buffer = line.getBytes();
         DatagramPacket msg = new DatagramPacket(buffer, buffer.length, address, port);
         try {
@@ -70,7 +69,7 @@ public class Notify extends Thread {
     }
 
     public void decline (InetAddress address, int port) {
-        String line = "Decline";
+        String line = "Declined";
         byte[] buffer = line.getBytes();
         DatagramPacket msg = new DatagramPacket(buffer, buffer.length, address, port);
         try {

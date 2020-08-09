@@ -268,5 +268,14 @@ public class Database extends RemoteServer implements RegRemoteInterface {
         if(nickname == null) throw new NullPointerException("Invalid username");
         return dataMap.get(nickname);
     }
+    public synchronized void updateChallenge() {
+        try {
+            FileWriter wrt = new FileWriter(jsonpath);
+            gwriter.toJson(dataMap, wrt);
+            wrt.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

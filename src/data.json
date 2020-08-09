@@ -1,14 +1,14 @@
 {
   "Nico": {
     "passwd": "nico",
-    "score": 0,
+    "score": 11,
     "friendList": [
       "Alice"
     ]
   },
   "Alice": {
     "passwd": "alice",
-    "score": 0,
+    "score": 18,
     "friendList": [
       "Nico"
     ]

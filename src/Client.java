@@ -37,8 +37,6 @@ public class Client {
     private static MainView mainView;
     private static ChallengeView gameView;
 
-    public int words;
-
     public static void main(String[] args) {
         //building RMI service
         Registry reg;
@@ -82,9 +80,8 @@ public class Client {
     }
 
     public void gotoChallengeView() {
-        gameView = new ChallengeView();
-        gameView.setInstance(this);
-        gameView.setWord(words);
+        gameView = new ChallengeView(userNickname);
+        gameView.setInstance(this, challengePort, sockTCP.getInetAddress(), mainView);
     }
 
 

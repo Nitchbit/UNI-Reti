@@ -18,11 +18,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ChallengeHandler extends Thread {
@@ -43,8 +39,7 @@ public class ChallengeHandler extends Thread {
     private ArrayList<SelectionKey> clientkeys;
 
     private Database database;
-    public int kWords;
-    private static int timer;
+    public int kWords = 8;
 
     //atomic variable to know if the client has finished
     private volatile AtomicInteger users;
@@ -133,9 +128,8 @@ public class ChallengeHandler extends Thread {
             return;
         }
         //chosing k words
-        kWords = (int) ((Math.random() * (16 - 5 + 1) + 5));
         for(int i = 0; i < kWords; i++) {
-            chosenWords.add(String.valueOf(wordArray.get((int) ((Math.random() * wordArray.size())))).replaceAll("\"",""));
+            chosenWords.add(String.valueOf(wordArray.get((int) ((Math.random() * wordArray.size())))).replaceAll("\"", ""));
         }
 
         //creating socket
@@ -160,6 +154,7 @@ public class ChallengeHandler extends Thread {
                 selector.select();
             } catch (IOException e) {
                 e.printStackTrace();
+                break;
             }
             //set of ready channels
             Set<SelectionKey> ready = selector.selectedKeys();
@@ -183,7 +178,72 @@ public class ChallengeHandler extends Thread {
                             //getting translation of each word
                             getTranslation();
                             //creating the timer for the challenge
-                            new MyTimer(kWords * 2, this);
+                            new MyTimer(60, this);
+                        }
+                    }
+                    if(key.isWritable()) {
+                        //retrieving the channel that is writable
+                        SocketChannel client = (SocketChannel) key.channel();
+                        //retrieving the user state attached
+                        Item newItem = (Item) key.attachment();
+                        //check if there is something else to write
+                        if(newItem.getWord() == null) {
+                            //set the new word if no one has terminated or the time is not over
+                            if(newItem.getIndex() < kWords && users.get() != 2 && timeout.get() == 0) {
+                                newItem.setWord(chosenWords.get(newItem.getIndex()));
+                            }
+                            else {
+                                String token = null;
+                                //time is over
+                                if(timeout.get() == 1) {
+                                    token = "Timeout";
+                                }
+                                //challenge is ended
+                                else {
+                                    token = "End";
+                                }
+                                Item first = (Item) clientkeys.get(0).attachment();
+                                Item second= (Item) clientkeys.get(1).attachment();
+                                //check the scores
+                                if(first.getPoints() == second.getPoints()) {
+                                    newItem.setWord(token + " " + newItem.getPoints() + " TIE");
+                                }
+                                else if(first.getPoints() < second.getPoints() && newItem.getUser().equals(second.getUser())) {
+                                    newItem.setWord(token + " " + newItem.getPoints() + " WIN");
+                                    Database.DataObject user = database.getUser(newItem.getUser());
+                                    user.setScore(bonus);
+                                }
+                                else if(first.getPoints() > second.getPoints() && newItem.getUser().equals(first.getUser())) {
+                                    newItem.setWord(token + " " + newItem.getPoints() + " WIN");
+                                    Database.DataObject user = database.getUser(newItem.getUser());
+                                    user.setScore(bonus);
+                                }
+                                else {
+                                    newItem.setWord(token + " " + newItem.getPoints() + " LOSE");
+                                }
+                                users.incrementAndGet();
+                            }
+                        }
+                        //writing the word into the channel
+                        ByteBuffer toWrite = ByteBuffer.wrap(newItem.getWord().getBytes());
+                        int byteWritten = client.write(toWrite);
+                        //check the byte written
+                        if(byteWritten == newItem.getWord().length()) {
+                            //if the whole word has been written, reset the key
+                            newItem.setWord(null);
+                            key.attach(newItem);
+                            key.interestOps(SelectionKey.OP_READ);
+                        }
+                        else if(byteWritten == -1) {
+                            //if the write return -1 or the client has closed the socket
+                            key.cancel();
+                            key.channel().close();
+                        }
+                        else {
+                            //there is something to write
+                            toWrite.flip();
+                            newItem.setWord(StandardCharsets.UTF_8.decode(toWrite).toString());
+                            key.attach(newItem);
                         }
                     }
                     if(key.isReadable()) {
@@ -209,8 +269,8 @@ public class ChallengeHandler extends Thread {
                         if(byteRed < 1024) {
                             toRead.flip();
                             token = token + StandardCharsets.UTF_8.decode(toRead).toString();
-                            if(token.equals("Exiting")) {
-                                users.getAndIncrement();
+                            if(token.equals("Exit")) {
+                                users.incrementAndGet();
                                 key.cancel();
                                 key.channel().close();
                             }
@@ -218,8 +278,12 @@ public class ChallengeHandler extends Thread {
                                 //tokenizing the string
                                 String[] tokens = token.split(" ");
                                 //saving name
-                                if(newItem.getUser() == null) newItem.setUser(tokens[0]);
-                                if(users.get() == 0 && timeout.get() == 0) checkTranslation(tokens[1], englishWords.get(newItem.getIndex()), tokens[0], newItem);
+                                if(newItem.getUser() == null) {
+                                    newItem.setUser(tokens[0]);
+                                    Item u = new Item(null, 0);
+                                    u.setUser(tokens[0]);
+                                }
+                                if(users.get() != 2 && timeout.get() == 0) checkTranslation(tokens[1], englishWords.get(newItem.getIndex()), tokens[0], newItem);
                                 //resetting item
                                 newItem.setWord(null);
                                 newItem.incIndex();
@@ -233,74 +297,9 @@ public class ChallengeHandler extends Thread {
                             key.channel().close();
                         }
                     }
-                    if(key.isWritable()) {
-                        //retrieving the channel that is writable
-                        SocketChannel client = (SocketChannel) key.channel();
-                        //retrieving the user state attached
-                        Item newItem = (Item) key.attachment();
-                        //check if there is something else to write
-                        if(newItem.getWord() == null) {
-                            //set the new word if no one has terminated or the time is not over
-                            if(newItem.getIndex() < kWords && users.get() != 1 && timeout.get() == 0) {
-                                newItem.setWord(chosenWords.get(newItem.getIndex()));
-                            }
-                            else {
-                                String token = null;
-                                //time is over
-                                if(timeout.get() == 1) {
-                                    token = "Timeout";
-                                }
-                                //challenge is ended
-                                else {
-                                    token = "End";
-                                }
-                                Item first = (Item) clientkeys.get(0).attachment();
-                                Item second= (Item) clientkeys.get(1).attachment();
-                                //check the scores
-                                if(first.getPoints() == second.getPoints()) {
-                                    newItem.setWord(token + " " + newItem.getPoints() + " tie");
-                                }
-                                else if(first.getPoints() < second.getPoints() && newItem.getUser().equals(second.getUser())) {
-                                    newItem.setWord(token + " " + newItem.getPoints() + " win");
-                                    Database.DataObject user = database.getUser(newItem.getUser());
-                                    user.setScore(bonus);
-                                }
-                                else if(first.getPoints() > second.getPoints() && newItem.getUser().equals(first.getUser())) {
-                                    newItem.setWord(token + " " + newItem.getPoints() + " win");
-                                    Database.DataObject user = database.getUser(newItem.getUser());
-                                    user.setScore(bonus);
-                                }
-                                else {
-                                    newItem.setWord(token + " " + newItem.getPoints() + " lose");
-                                }
-                                users.getAndIncrement();
-                            }
-                        }
-                        //writing the word into the channel
-                        ByteBuffer toWrite = ByteBuffer.wrap(newItem.getWord().getBytes());
-                        int byteWritten = client.write(toWrite);
-                        //check the byte written
-                        if(byteWritten == newItem.getWord().length()) {
-                            //if the whole word has been written, reset the key
-                            newItem.setWord(null);
-                            key.attach(newItem);
-                            key.interestOps(SelectionKey.OP_READ);
-                        }
-                        else if(byteWritten == -1) {
-                            //if the write return -1 or the client has closed the socket
-                            key.cancel();
-                            key.channel().close();
-                        }
-                        else {
-                            //there is something to write
-                            toWrite.flip();
-                            newItem.setWord(StandardCharsets.UTF_8.decode(toWrite).toString());
-                            key.attach(newItem);
-                        }
-                    }
                 } catch (Exception e) {
+                    key.cancel();
                     try {
-                        key.cancel();
                         key.channel().close();
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
@@ -308,11 +307,16 @@ public class ChallengeHandler extends Thread {
                 }
             }
         }
+        if (users.get() == 2) {
+            database.updateChallenge();
+        }
     }
 
     //function to check the translation
     public void checkTranslation(String word, String translation, String name, Item item) {
         Database.DataObject user = database.getUser(name);
+        System.out.println(translation);
+        System.out.println(word);
         if(word.equals(translation)) {
             item.setPoints(correct);
             item.incCorrect();
@@ -344,10 +348,10 @@ public class ChallengeHandler extends Thread {
                 JSONObject o = (JSONObject) parser.parse(line);
                 JSONObject obj = (JSONObject) o.get("responseData");
                 englishWords.add(i, (String) obj.get("translatedText").toString().toLowerCase());
-                connection.disconnect();
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+            connection.disconnect();
         }
     }
 

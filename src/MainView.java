@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 public class MainView {
-    private JFrame frame;
+    public JFrame frame;
 
     private Client clientInstance;
     private Notify notifyInstance;
@@ -67,9 +67,9 @@ public class MainView {
      */
     private void $$$setupUI$$$() {
         mainPanel = new JPanel();
-        mainPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(8, 5, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(7, 5, new Insets(0, 0, 0, 0), -1, -1));
         mainPanel.setBackground(new Color(-16449406));
-        mainPanel.setPreferredSize(new Dimension(575, 350));
+        mainPanel.setPreferredSize(new Dimension(625, 350));
         mainPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         addFriend = new JButton();
         addFriend.setBackground(new Color(-10855073));
@@ -85,7 +85,7 @@ public class MainView {
         if (nameFieldFont != null) nameField.setFont(nameFieldFont);
         nameField.setForeground(new Color(-16777216));
         nameField.setMargin(new Insets(2, 6, 2, 6));
-        mainPanel.add(nameField, new com.intellij.uiDesigner.core.GridConstraints(0, 3, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(120, 30), null, 0, false));
+        mainPanel.add(nameField, new com.intellij.uiDesigner.core.GridConstraints(0, 3, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 30), null, 0, false));
         challengeButton = new JButton();
         challengeButton.setBackground(new Color(-16734973));
         Font challengeButtonFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, challengeButton.getFont());
@@ -95,43 +95,29 @@ public class MainView {
         mainPanel.add(challengeButton, new com.intellij.uiDesigner.core.GridConstraints(1, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(45, 25), null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
         mainPanel.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(3, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        signOutButton = new JButton();
-        signOutButton.setBackground(new Color(-5296384));
-        Font signOutButtonFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, signOutButton.getFont());
-        if (signOutButtonFont != null) signOutButton.setFont(signOutButtonFont);
-        signOutButton.setForeground(new Color(-16777216));
-        signOutButton.setText("Sign Out");
-        mainPanel.add(signOutButton, new com.intellij.uiDesigner.core.GridConstraints(7, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(50, 30), null, 0, false));
-        scoreButton = new JButton();
-        scoreButton.setBackground(new Color(-10855073));
-        Font scoreButtonFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, scoreButton.getFont());
-        if (scoreButtonFont != null) scoreButton.setFont(scoreButtonFont);
-        scoreButton.setForeground(new Color(-16777216));
-        scoreButton.setText("Score");
-        mainPanel.add(scoreButton, new com.intellij.uiDesigner.core.GridConstraints(6, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(50, 30), null, 0, false));
-        scoreLabel = new JLabel();
-        Font scoreLabelFont = this.$$$getFont$$$("Inter Extra Bold", Font.BOLD, 20, scoreLabel.getFont());
-        if (scoreLabelFont != null) scoreLabel.setFont(scoreLabelFont);
-        scoreLabel.setForeground(new Color(-16777216));
-        scoreLabel.setText("");
-        mainPanel.add(scoreLabel, new com.intellij.uiDesigner.core.GridConstraints(5, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(40, 25), null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
-        mainPanel.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(4, 2, 4, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        mainPanel.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(5, 2, 2, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         notePane = new JScrollPane();
         notePane.setBackground(new Color(-10855073));
+        Font notePaneFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, notePane.getFont());
+        if (notePaneFont != null) notePane.setFont(notePaneFont);
+        notePane.setForeground(new Color(-16777216));
         notePane.setName("");
         notePane.setVerifyInputWhenFocusTarget(true);
         notePane.setVerticalScrollBarPolicy(20);
-        mainPanel.add(notePane, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 4, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        mainPanel.add(notePane, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 4, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(175, 100), null, 0, false));
         noteList = new JList<String>();
         noteList.setBackground(new Color(-10855073));
+        Font noteListFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, noteList.getFont());
+        if (noteListFont != null) noteList.setFont(noteListFont);
+        noteList.setForeground(new Color(-16777216));
         noteList.setName("");
         noteList.setSelectionMode(0);
         notePane.setViewportView(noteList);
         listPane = new JScrollPane();
         listPane.setBackground(new Color(-10855073));
         listPane.setVerticalScrollBarPolicy(20);
-        mainPanel.add(listPane, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 6, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        mainPanel.add(listPane, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 5, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         listArea = new JTextArea();
         listArea.setBackground(new Color(-10855073));
         listArea.setEditable(false);
@@ -163,14 +149,34 @@ public class MainView {
         nameLabel.setOpaque(true);
         nameLabel.setText("");
         mainPanel.add(nameLabel, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final com.intellij.uiDesigner.core.Spacer spacer3 = new com.intellij.uiDesigner.core.Spacer();
+        mainPanel.add(spacer3, new com.intellij.uiDesigner.core.GridConstraints(4, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         errorLabel = new JLabel();
         Font errorLabelFont = this.$$$getFont$$$("Inter Extra Bold", Font.BOLD, 14, errorLabel.getFont());
         if (errorLabelFont != null) errorLabel.setFont(errorLabelFont);
         errorLabel.setForeground(new Color(-6619134));
         errorLabel.setText("");
-        mainPanel.add(errorLabel, new com.intellij.uiDesigner.core.GridConstraints(2, 3, 2, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final com.intellij.uiDesigner.core.Spacer spacer3 = new com.intellij.uiDesigner.core.Spacer();
-        mainPanel.add(spacer3, new com.intellij.uiDesigner.core.GridConstraints(4, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        mainPanel.add(errorLabel, new com.intellij.uiDesigner.core.GridConstraints(4, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        scoreLabel = new JLabel();
+        Font scoreLabelFont = this.$$$getFont$$$("Inter Extra Bold", Font.BOLD, 20, scoreLabel.getFont());
+        if (scoreLabelFont != null) scoreLabel.setFont(scoreLabelFont);
+        scoreLabel.setForeground(new Color(-16777216));
+        scoreLabel.setText("");
+        mainPanel.add(scoreLabel, new com.intellij.uiDesigner.core.GridConstraints(4, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(40, 25), null, 0, false));
+        scoreButton = new JButton();
+        scoreButton.setBackground(new Color(-10855073));
+        Font scoreButtonFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, scoreButton.getFont());
+        if (scoreButtonFont != null) scoreButton.setFont(scoreButtonFont);
+        scoreButton.setForeground(new Color(-16777216));
+        scoreButton.setText("Score");
+        mainPanel.add(scoreButton, new com.intellij.uiDesigner.core.GridConstraints(5, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(50, 30), null, 0, false));
+        signOutButton = new JButton();
+        signOutButton.setBackground(new Color(-5296384));
+        Font signOutButtonFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, signOutButton.getFont());
+        if (signOutButtonFont != null) signOutButton.setFont(signOutButtonFont);
+        signOutButton.setForeground(new Color(-16777216));
+        signOutButton.setText("Sign Out");
+        mainPanel.add(signOutButton, new com.intellij.uiDesigner.core.GridConstraints(6, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(50, 30), null, 0, false));
     }
 
     /**
@@ -233,7 +239,7 @@ public class MainView {
 
     public MainView() {
         frame = new JFrame();
-        frame.setSize(575, 350);
+        frame.setSize(625, 350);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setTitle("WORD QUIZZLE");
 
@@ -264,6 +270,7 @@ public class MainView {
                 notifyInstance.accept(rem.address, rem.UDPPort);
                 clientInstance.challengePort = rem.TCPPort;
                 //go to game
+                frame.setEnabled(false);
                 clientInstance.gotoChallengeView();
             }
             if (selection.equals(1)) {
