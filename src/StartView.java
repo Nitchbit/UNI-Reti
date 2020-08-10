@@ -41,7 +41,7 @@ public class StartView {
     private void $$$setupUI$$$() {
         panelView = new JPanel();
         panelView.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
-        panelView.setBackground(new Color(-16449406));
+        panelView.setBackground(new Color(-16449431));
         panelView.setFocusable(false);
         Font panelViewFont = this.$$$getFont$$$("OpenDyslexicAlta", Font.BOLD, 36, panelView.getFont());
         if (panelViewFont != null) panelView.setFont(panelViewFont);
@@ -49,7 +49,7 @@ public class StartView {
         panelView.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         mainMSG1 = new JLabel();
         mainMSG1.setAlignmentX(0.0f);
-        mainMSG1.setBackground(new Color(-16449406));
+        mainMSG1.setBackground(new Color(-16449431));
         mainMSG1.setDoubleBuffered(false);
         mainMSG1.setEnabled(true);
         Font mainMSG1Font = this.$$$getFont$$$("OpenDyslexicMono", Font.BOLD, 48, mainMSG1.getFont());
@@ -61,7 +61,7 @@ public class StartView {
         mainMSG1.setVerticalAlignment(1);
         panelView.add(mainMSG1, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_NORTH, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(300, 79), null, 0, false));
         mainMSG = new JLabel();
-        mainMSG.setBackground(new Color(-16449406));
+        mainMSG.setBackground(new Color(-16449431));
         Font mainMSGFont = this.$$$getFont$$$("OpenDyslexicMono", Font.BOLD, 48, mainMSG.getFont());
         if (mainMSGFont != null) mainMSG.setFont(mainMSGFont);
         mainMSG.setForeground(new Color(-657931));

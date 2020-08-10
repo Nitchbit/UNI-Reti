@@ -189,7 +189,7 @@ public class ChallengeHandler extends Thread {
                         //check if there is something else to write
                         if(newItem.getWord() == null) {
                             //set the new word if no one has terminated or the time is not over
-                            if(newItem.getIndex() < kWords && users.get() != 2 && timeout.get() == 0) {
+                            if(newItem.getIndex() < kWords && users.get() != 1 && timeout.get() == 0) {
                                 newItem.setWord(chosenWords.get(newItem.getIndex()));
                             }
                             else {
@@ -315,8 +315,8 @@ public class ChallengeHandler extends Thread {
     //function to check the translation
     public void checkTranslation(String word, String translation, String name, Item item) {
         Database.DataObject user = database.getUser(name);
-        System.out.println(translation);
         System.out.println(word);
+        System.out.println(translation);
         if(word.equals(translation)) {
             item.setPoints(correct);
             item.incCorrect();
@@ -331,7 +331,7 @@ public class ChallengeHandler extends Thread {
 
     //function to get the translation
     public void getTranslation() throws IOException {
-        //httl request for each word to be translated
+        //http request for each word to be translated
         for(int i = 0; i < kWords; i++) {
             URL newUrl = new URL("https://api.mymemory.translated.net/get?q=" + chosenWords.get(i) + "&langpair=it|en");
             HttpsURLConnection connection = (HttpsURLConnection) newUrl.openConnection();

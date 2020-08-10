@@ -41,6 +41,7 @@ public class Notify extends Thread {
                     clientFather.challengePort = Integer.parseInt(token[2]);
                     //start the game view
                     clientFather.gotoChallengeView();
+                    myMainView.frame.setEnabled(false);
                 }
                 if (token[0].equals("Declined")) {
                     myMainView.errorLabel.setText("Your request was refused");

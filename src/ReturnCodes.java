@@ -32,9 +32,9 @@ public class ReturnCodes {
             case ALREADY_FRIENDS:
                 return "This user is already your friends";
             case NOT_A_FRIEND:
-                return "This user is not your friends";
+                return "This user is not your friend";
             case USER_NOT_ONLINE:
-                return "The user is not online";
+                return "This user is not online";
             case SUCCESS:
                 return "Request succeeded";
             case COMMAND_NOT_FOUND:
@@ -45,30 +45,28 @@ public class ReturnCodes {
     }
     public static ReturnCodes.Codex toCodex(String message) {
         switch (message) {
-            case "EMPTY_NICK_OR_PASS":
+            case "Empty username or empty password":
                 return Codex.EMPTY_NICK_OR_PASS;
-            case "ALREADY_REGISTERED":
+            case "Username not available":
                 return Codex.ALREADY_REGISTERED;
-            case "USER_NOT_FOUND":
+            case "User not found":
                 return Codex.USER_NOT_FOUND;
-            case "WRONG_PASSWORD":
+            case "Incorrect password":
                 return Codex.WRONG_PASSWORD;
-            case "ALREADY_LOGGED_IN":
+            case "This user is already logged in":
                 return Codex.ALREADY_LOGGED_IN;
-            case "ALREADY_LOGGED_OUT":
+            case "This user is already logged out":
                 return Codex.ALREADY_LOGGED_OUT;
-            case "ALREADY_FRIENDS":
+            case "This user is already your friends":
                 return Codex.ALREADY_FRIENDS;
-            case "NOT_A_FRIEND":
+            case "This user is not your friend":
                 return Codex.NOT_A_FRIEND;
-            case "USER_NOT_ONLINE":
+            case "This user is not online":
                 return Codex.USER_NOT_ONLINE;
-            case "SUCCESS":
-                return Codex.SUCCESS;
-            case "COMMAND_NOT_FOUND":
-                return Codex.COMMAND_NOT_FOUND;
             case "Request succeeded":
                 return Codex.SUCCESS;
+            case "Request failed":
+                return Codex.COMMAND_NOT_FOUND;
             default:
                 return Codex.UNKNOWN_CODE;
 

@@ -58,7 +58,7 @@ public class AccessView {
     private void $$$setupUI$$$() {
         mainPanel = new JPanel();
         mainPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 2, new Insets(0, 0, 0, 0), -1, -1));
-        mainPanel.setBackground(new Color(-16449406));
+        mainPanel.setBackground(new Color(-16449431));
         mainPanel.setFocusCycleRoot(true);
         mainPanel.setForeground(new Color(-657931));
         mainPanel.setName("WORLD QUIZZLE");
@@ -117,7 +117,9 @@ public class AccessView {
         signInButton.setText("Sign In");
         mainPanel.add(signInButton, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_NORTHWEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(80, 40), null, 0, false));
         errorLabel = new JLabel();
-        errorLabel.setForeground(new Color(-3993088));
+        Font errorLabelFont = this.$$$getFont$$$("Inter Extra Bold", Font.BOLD, 14, errorLabel.getFont());
+        if (errorLabelFont != null) errorLabel.setFont(errorLabelFont);
+        errorLabel.setForeground(new Color(-2682368));
         errorLabel.setText("");
         mainPanel.add(errorLabel, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(160, 40), null, 0, false));
     }

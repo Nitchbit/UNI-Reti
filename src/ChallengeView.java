@@ -121,7 +121,7 @@ public class ChallengeView {
     private void $$$setupUI$$$() {
         mainPanel = new JPanel();
         mainPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 6, new Insets(0, 0, 0, 0), -1, -1));
-        mainPanel.setBackground(new Color(-16449406));
+        mainPanel.setBackground(new Color(-16449431));
         mainPanel.setEnabled(false);
         mainPanel.setForeground(new Color(-16777216));
         mainPanel.setPreferredSize(new Dimension(400, 150));
@@ -181,7 +181,7 @@ public class ChallengeView {
         errorLabel = new JLabel();
         Font errorLabelFont = this.$$$getFont$$$("Inter Extra Bold", Font.BOLD, 12, errorLabel.getFont());
         if (errorLabelFont != null) errorLabel.setFont(errorLabelFont);
-        errorLabel.setForeground(new Color(-3997694));
+        errorLabel.setForeground(new Color(-2752510));
         errorLabel.setText("");
         mainPanel.add(errorLabel, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
@@ -253,7 +253,7 @@ public class ChallengeView {
             try {
                 while (buffer.hasRemaining()) {
                     sockChannel.write(buffer);
-                }
+                }frame.setEnabled(false);
                 buffer.clear();
                 buffer.flip();
             } catch (Exception exception) {

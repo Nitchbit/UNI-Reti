@@ -50,7 +50,7 @@ public class ClientHandler implements Runnable{
                     ReturnCodes.Codex result = dataStructure.userAddFriend(tokenParams[1], tokenParams[2]);
 
                     //writing response to client
-                    writer.write(String.valueOf(result));
+                    writer.write(ReturnCodes.toMessage(result));
                     writer.newLine();
                     writer.flush();
                 }
@@ -139,6 +139,13 @@ public class ClientHandler implements Runnable{
                     writer.newLine();
                     writer.flush();
                 }
+                if (clientTCPSock.isClosed()) {
+                    dataStructure.userLogout(tokenParams[1]);
+                    //closing sockets
+                    clientUDPSock.close();
+                    clientTCPSock.close();
+                }
+
                 lineTmp = reader.readLine();
                 tokenParams = lineTmp.split(" ");
             }

@@ -17,7 +17,6 @@ public class Server {
     private static int portSocket = 6000;
     //RMI service port
     private static int portRMI = 7000;
-    private static final String address = "localhost";
 
     public static void main(String[] args){
         System.out.println("Starting...");

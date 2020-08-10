@@ -25,7 +25,7 @@ public class Client {
     //RMI port
     private static int portRMI = 7000;
     //server address
-    private static String serverInetAddress = "localhost";
+    private static String serverInetAddress = "192.168.43.109";
     private BufferedWriter writer;
     private BufferedReader reader;
     public String userNickname;
@@ -42,7 +42,7 @@ public class Client {
         Registry reg;
         Remote remObject;
         try {
-            reg = LocateRegistry.getRegistry(portRMI);
+            reg = LocateRegistry.getRegistry(serverInetAddress, portRMI);
             remObject = reg.lookup("RegistrationService");
             userReg = (RegRemoteInterface) remObject;
         } catch (RemoteException | NotBoundException e) {

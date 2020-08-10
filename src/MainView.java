@@ -39,6 +39,10 @@ public class MainView {
 
     private JLabel nameLabel;
     public JLabel errorLabel;
+    private JPanel confirmPanel;
+    private JButton yesButton;
+    private JButton noButton;
+    private JLabel questionLabel;
 
     private Vector<String> list = new Vector<>();
 
@@ -68,7 +72,7 @@ public class MainView {
     private void $$$setupUI$$$() {
         mainPanel = new JPanel();
         mainPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(7, 5, new Insets(0, 0, 0, 0), -1, -1));
-        mainPanel.setBackground(new Color(-16449406));
+        mainPanel.setBackground(new Color(-16449431));
         mainPanel.setPreferredSize(new Dimension(625, 350));
         mainPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         addFriend = new JButton();
@@ -95,8 +99,6 @@ public class MainView {
         mainPanel.add(challengeButton, new com.intellij.uiDesigner.core.GridConstraints(1, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(45, 25), null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
         mainPanel.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(3, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
-        mainPanel.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(5, 2, 2, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         notePane = new JScrollPane();
         notePane.setBackground(new Color(-10855073));
         Font notePaneFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, notePane.getFont());
@@ -108,6 +110,7 @@ public class MainView {
         mainPanel.add(notePane, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 4, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(175, 100), null, 0, false));
         noteList = new JList<String>();
         noteList.setBackground(new Color(-10855073));
+        noteList.setDropMode(DropMode.ON);
         Font noteListFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, noteList.getFont());
         if (noteListFont != null) noteList.setFont(noteListFont);
         noteList.setForeground(new Color(-16777216));
@@ -149,12 +152,12 @@ public class MainView {
         nameLabel.setOpaque(true);
         nameLabel.setText("");
         mainPanel.add(nameLabel, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final com.intellij.uiDesigner.core.Spacer spacer3 = new com.intellij.uiDesigner.core.Spacer();
-        mainPanel.add(spacer3, new com.intellij.uiDesigner.core.GridConstraints(4, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
+        mainPanel.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(4, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         errorLabel = new JLabel();
         Font errorLabelFont = this.$$$getFont$$$("Inter Extra Bold", Font.BOLD, 14, errorLabel.getFont());
         if (errorLabelFont != null) errorLabel.setFont(errorLabelFont);
-        errorLabel.setForeground(new Color(-6619134));
+        errorLabel.setForeground(new Color(-2686974));
         errorLabel.setText("");
         mainPanel.add(errorLabel, new com.intellij.uiDesigner.core.GridConstraints(4, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         scoreLabel = new JLabel();
@@ -177,6 +180,31 @@ public class MainView {
         signOutButton.setForeground(new Color(-16777216));
         signOutButton.setText("Sign Out");
         mainPanel.add(signOutButton, new com.intellij.uiDesigner.core.GridConstraints(6, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(50, 30), null, 0, false));
+        confirmPanel = new JPanel();
+        confirmPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        confirmPanel.setBackground(new Color(-10855073));
+        mainPanel.add(confirmPanel, new com.intellij.uiDesigner.core.GridConstraints(5, 2, 2, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(175, 100), null, 0, false));
+        confirmPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        yesButton = new JButton();
+        yesButton.setBackground(new Color(-16734973));
+        Font yesButtonFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, yesButton.getFont());
+        if (yesButtonFont != null) yesButton.setFont(yesButtonFont);
+        yesButton.setForeground(new Color(-16777216));
+        yesButton.setText("Yes");
+        confirmPanel.add(yesButton, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        noButton = new JButton();
+        noButton.setBackground(new Color(-5296384));
+        Font noButtonFont = this.$$$getFont$$$("Michroma", Font.BOLD, 12, noButton.getFont());
+        if (noButtonFont != null) noButton.setFont(noButtonFont);
+        noButton.setForeground(new Color(-16777216));
+        noButton.setText("No");
+        confirmPanel.add(noButton, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        questionLabel = new JLabel();
+        Font questionLabelFont = this.$$$getFont$$$("Inter Extra Bold", Font.BOLD, 12, questionLabel.getFont());
+        if (questionLabelFont != null) questionLabel.setFont(questionLabelFont);
+        questionLabel.setForeground(new Color(-16777216));
+        questionLabel.setText("");
+        confirmPanel.add(questionLabel, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -237,6 +265,16 @@ public class MainView {
         return removed;
     }
 
+    public Notification getNote(String username) {
+        Notification removed = null;
+        for (int i = 0; i < notifications.size(); i++) {
+            if (notifications.get(i).username.equals(username)) {
+                removed = notifications.get(i);
+            }
+        }
+        return removed;
+    }
+
     public MainView() {
         frame = new JFrame();
         frame.setSize(625, 350);
@@ -245,6 +283,7 @@ public class MainView {
 
         frame.add(mainPanel);
 
+        confirmPanel.setVisible(false);
         signOutButton.addActionListener(new SignOutAction());
         fListButton.addActionListener(new FriendsAction());
         ranking.addActionListener(new RankingAction());
@@ -252,31 +291,72 @@ public class MainView {
         challengeButton.addActionListener(new ChallengeAction());
         scoreButton.addActionListener(new ScoreAction());
 
-        noteList.addListSelectionListener(new listAction());
+        noteList.addListSelectionListener(new ListAction());
 
         frame.setVisible(true);
     }
 
-    public class listAction implements ListSelectionListener {
+    public class YesAction implements ActionListener {
+        private InetAddress address;
+        private int UDPport;
+        private int TCPport;
+        private String name;
+
+        public void set(InetAddress address, int UDPport, int TCPport, String name) {
+            this.address = address;
+            this.UDPport = UDPport;
+            this.TCPport = TCPport;
+            this.name = name;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            removeNote(name);
+            notifyInstance.accept(address, UDPport);
+            clientInstance.challengePort = TCPport;
+            //go to game
+            confirmPanel.setVisible(false);
+            clientInstance.gotoChallengeView();
+            frame.setEnabled(false);
+        }
+    }
+
+    public class NoAction implements ActionListener {
+        private InetAddress address;
+        private int UDPport;
+        private String name;
+
+        public void set(InetAddress address, int UDPport, String name) {
+            this.address = address;
+            this.UDPport = UDPport;
+            this.name = name;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            removeNote(name);
+            notifyInstance.decline(address, UDPport);
+            confirmPanel.setVisible(false);
+        }
+    }
+
+    public class ListAction implements ListSelectionListener {
         @Override
         public void valueChanged(ListSelectionEvent e) {
-            errorLabel.setText("");
-            String line = noteList.getSelectedValue();
-            Object[] option = {"Accept", "Decline"};
-            Object selection = JOptionPane.showOptionDialog(frame, null, null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, option, option[0]);
-            if (selection.equals(0)) {
+            if (e.getValueIsAdjusting()) {
+                errorLabel.setText("");
+                String line = noteList.getSelectedValue();
+                System.out.println(line);
                 String[] token = line.split(" ");
-                Notification rem = removeNote(token[2]);
-                notifyInstance.accept(rem.address, rem.UDPPort);
-                clientInstance.challengePort = rem.TCPPort;
-                //go to game
-                frame.setEnabled(false);
-                clientInstance.gotoChallengeView();
-            }
-            if (selection.equals(1)) {
-                String[] token = line.split(" ");
-                Notification rem = removeNote(token[2]);
-                notifyInstance.decline(rem.address, rem.UDPPort);
+                questionLabel.setText("Accept the challenge from " + token[2] + "?");
+                Notification rem = getNote(token[2]);
+                YesAction actionY = new YesAction();
+                actionY.set(rem.address, rem.UDPPort, rem.TCPPort, token[2]);
+                yesButton.addActionListener(actionY);
+                NoAction actionN = new NoAction();
+                actionN.set(rem.address, rem.UDPPort, token[2]);
+                noButton.addActionListener(actionN);
+                confirmPanel.setVisible(true);
             }
         }
     }
@@ -335,6 +415,7 @@ public class MainView {
         @Override
         public void actionPerformed(ActionEvent e) {
             errorLabel.setText("");
+            if (nameLabel.getText().equals(nameField.getText())) errorLabel.setText("You can't challenge yourself");
             ReturnCodes.Codex result = clientInstance.challenge(nameField.getText());
             errorLabel.setText(ReturnCodes.toMessage(result));
         }
