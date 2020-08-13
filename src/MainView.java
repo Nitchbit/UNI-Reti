@@ -346,7 +346,6 @@ public class MainView {
             if (e.getValueIsAdjusting()) {
                 errorLabel.setText("");
                 String line = noteList.getSelectedValue();
-                System.out.println(line);
                 String[] token = line.split(" ");
                 questionLabel.setText("Accept the challenge from " + token[2] + "?");
                 Notification rem = getNote(token[2]);
@@ -404,9 +403,14 @@ public class MainView {
         @Override
         public void actionPerformed(ActionEvent e) {
             errorLabel.setText("");
-            ReturnCodes.Codex result = clientInstance.addFriend(nameField.getText());
-            if (!result.equals(ReturnCodes.Codex.SUCCESS)) {
-                errorLabel.setText(ReturnCodes.toMessage(result));
+            if (nameField.getText().equals(nameLabel.getText())) {
+                errorLabel.setText("You can't add yourself");
+            }
+            else {
+                ReturnCodes.Codex result = clientInstance.addFriend(nameField.getText());
+                if (!result.equals(ReturnCodes.Codex.SUCCESS)) {
+                    errorLabel.setText(ReturnCodes.toMessage(result));
+                }
             }
         }
     }
@@ -415,9 +419,11 @@ public class MainView {
         @Override
         public void actionPerformed(ActionEvent e) {
             errorLabel.setText("");
-            if (nameLabel.getText().equals(nameField.getText())) errorLabel.setText("You can't challenge yourself");
-            ReturnCodes.Codex result = clientInstance.challenge(nameField.getText());
-            errorLabel.setText(ReturnCodes.toMessage(result));
+            if (nameField.getText().equals(nameLabel.getText())) errorLabel.setText("You can't challenge yourself");
+            else {
+                ReturnCodes.Codex result = clientInstance.challenge(nameField.getText());
+                errorLabel.setText(ReturnCodes.toMessage(result));
+            }
         }
     }
 

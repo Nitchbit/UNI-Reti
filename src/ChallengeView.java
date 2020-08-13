@@ -81,7 +81,7 @@ public class ChallengeView {
                 italianField.setText(tok[0]);
                 valueBar = index * (100 / 8);
                 progressBar.setValue(valueBar);
-                progressBar.setString(String.valueOf(valueBar) + "%");
+                progressBar.setString(valueBar + "%");
                 index++;
             }
         } catch (IOException e) {
@@ -249,11 +249,12 @@ public class ChallengeView {
         @Override
         public void actionPerformed(ActionEvent e) {
             String line = "Exit";
-            buffer = buffer.wrap(line.getBytes());
+            buffer = ByteBuffer.wrap(line.getBytes());
             try {
                 while (buffer.hasRemaining()) {
                     sockChannel.write(buffer);
-                }frame.setEnabled(false);
+                }
+                frame.setEnabled(false);
                 buffer.clear();
                 buffer.flip();
             } catch (Exception exception) {

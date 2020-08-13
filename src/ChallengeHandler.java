@@ -47,23 +47,19 @@ public class ChallengeHandler extends Thread {
 
     //points
     private int correct = 5;
-    private int wrong = -3;
+    private int wrong = -2;
     private int bonus = 3;
 
     //class used to represent user during the challenge
     private class Item {
         private String username;
         private int challengePoints;
-        private int correctWords;
-        private int wrongWords;
         private int indexWord;
         private String word;
 
         public Item(String word, int indexWord) {
             this.username = null;
             this.challengePoints = 0;
-            this.correctWords = 0;
-            this.wrongWords = 0;
             this.indexWord = indexWord;
             this.word = word;
         }
@@ -79,18 +75,6 @@ public class ChallengeHandler extends Thread {
         }
         public void setPoints(int point) {
             this.challengePoints += point;
-        }
-        public int getCorrect() {
-            return this.correctWords;
-        }
-        public void incCorrect() {
-            this.correctWords++;
-        }
-        public int getWrong() {
-            return this.wrongWords;
-        }
-        public void incWrong() {
-            this.wrongWords++;
         }
         public int getIndex() {
             return this.indexWord;
@@ -283,7 +267,9 @@ public class ChallengeHandler extends Thread {
                                     Item u = new Item(null, 0);
                                     u.setUser(tokens[0]);
                                 }
-                                if(users.get() != 2 && timeout.get() == 0) checkTranslation(tokens[1], englishWords.get(newItem.getIndex()), tokens[0], newItem);
+                                if(users.get() != 2 && timeout.get() == 0) {
+                                    checkTranslation(tokens[1], englishWords.get(newItem.getIndex()), tokens[0], newItem);
+                                }
                                 //resetting item
                                 newItem.setWord(null);
                                 newItem.incIndex();
@@ -307,7 +293,7 @@ public class ChallengeHandler extends Thread {
                 }
             }
         }
-        if (users.get() == 2) {
+        if (users.get() == 2 || timeout.get() == 1) {
             database.updateChallenge();
         }
     }
@@ -319,12 +305,10 @@ public class ChallengeHandler extends Thread {
         System.out.println(translation);
         if(word.equals(translation)) {
             item.setPoints(correct);
-            item.incCorrect();
             user.setScore(correct);
         }
         else {
             item.setPoints(wrong);
-            item.incWrong();
             user.setScore(wrong);
         }
     }

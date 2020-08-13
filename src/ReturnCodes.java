@@ -1,5 +1,3 @@
-import javax.crypto.Cipher;
-
 public class ReturnCodes {
     public enum Codex {
         EMPTY_NICK_OR_PASS,

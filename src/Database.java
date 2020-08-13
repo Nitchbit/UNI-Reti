@@ -65,7 +65,7 @@ public class Database extends RemoteServer implements RegRemoteInterface {
         public void setInetAddress(InetAddress addr) {
             this.inetAddr = addr;
         }
-        public InetAddress getInetAdrress() {
+        public InetAddress getInetAddress() {
             return this.inetAddr;
         }
         public void setUDPport(int port) {
@@ -203,7 +203,7 @@ public class Database extends RemoteServer implements RegRemoteInterface {
                 //sending request if nickfriend is online
                 if(dataMap.get(nickfriend).getStatus()) {
                     String line = "Challenge " + nickname + " " + challengePort;
-                    DatagramPacket message = new DatagramPacket(line.getBytes(), line.getBytes().length, dataMap.get(nickfriend).getInetAdrress(), dataMap.get(nickfriend).getUDPport());
+                    DatagramPacket message = new DatagramPacket(line.getBytes(), line.getBytes().length, dataMap.get(nickfriend).getInetAddress(), dataMap.get(nickfriend).getUDPport());
                     try {
                         dataSock.send(message);
                     } catch (IOException e) {
@@ -223,7 +223,7 @@ public class Database extends RemoteServer implements RegRemoteInterface {
         //sending the timeout to the challenged
         if(result.equals("Timeout")) {
             line = line + " by " + nickname;
-            DatagramPacket message = new DatagramPacket(line.getBytes(), line.getBytes().length, dataMap.get(nickfriend).getInetAdrress(), dataMap.get(nickfriend).getUDPport());
+            DatagramPacket message = new DatagramPacket(line.getBytes(), line.getBytes().length, dataMap.get(nickfriend).getInetAddress(), dataMap.get(nickfriend).getUDPport());
             try {
                 dataSock.send(message);
             } catch (IOException e) {
@@ -233,7 +233,7 @@ public class Database extends RemoteServer implements RegRemoteInterface {
         else {
             //sending the accepted or declined request to the challenger
             if (result.equals("Accepted")) line = line + " " + kwords + " " + challengePort;
-            DatagramPacket message = new DatagramPacket(line.getBytes(), line.getBytes().length, dataMap.get(nickname).getInetAdrress(), dataMap.get(nickname).getUDPport());
+            DatagramPacket message = new DatagramPacket(line.getBytes(), line.getBytes().length, dataMap.get(nickname).getInetAddress(), dataMap.get(nickname).getUDPport());
             try {
                 dataSock.send(message);
             } catch (IOException e) {
