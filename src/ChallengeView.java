@@ -99,7 +99,6 @@ public class ChallengeView {
 
         sendButton.addActionListener(start);
         exitButton.addActionListener(new ExitAction());
-        exitButton.setVisible(false);
 
         frame.setVisible(true);
     }
@@ -171,7 +170,7 @@ public class ChallengeView {
         mainPanel.add(ENGLISHTextField, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
         exitButton = new JButton();
         exitButton.setBackground(new Color(-3993088));
-        exitButton.setEnabled(false);
+        exitButton.setEnabled(true);
         Font exitButtonFont = this.$$$getFont$$$("Michroma", Font.BOLD, 14, exitButton.getFont());
         if (exitButtonFont != null) exitButton.setFont(exitButtonFont);
         exitButton.setForeground(new Color(-16777216));
